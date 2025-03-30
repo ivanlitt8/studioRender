@@ -1,7 +1,6 @@
-import React from 'react';
-import { motion } from 'framer-motion';
-import { useInView } from 'react-intersection-observer';
-import { Linkedin, Bean as Behance, Twitter } from 'lucide-react';
+import { motion } from "framer-motion";
+import { useInView } from "react-intersection-observer";
+// import { Linkedin, Bean as Behance, Twitter } from "lucide-react";
 
 interface TeamMember {
   id: number;
@@ -19,74 +18,84 @@ interface TeamMember {
 const teamMembers: TeamMember[] = [
   {
     id: 1,
-    name: "Sarah Anderson",
-    role: "Principal Architect & Founder",
-    bio: "With over 15 years of experience in sustainable architecture, Sarah leads our team with innovative design approaches and a passion for environmental consciousness.",
-    image: "https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&q=80",
+    name: "Juan Insua",
+    role: "CEO, Creative Director & Co-Founder",
+    bio: "With extensive experience in business strategy and creative design, Juan drives our vision with a balanced approach to innovation and operational excellence. As a co-founder, he is responsible for setting the strategic direction and nurturing a culture of creative problem-solving.",
+    image:
+      "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/images//Portrait_Juan.jpeg",
     social: {
       linkedin: "#",
       behance: "#",
-      twitter: "#"
-    }
+      twitter: "#",
+    },
   },
   {
     id: 2,
-    name: "David Chen",
-    role: "Creative Director",
-    bio: "David brings his expertise in architectural visualization and CGI, creating stunning visual narratives that bring our clients' visions to life.",
-    image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80",
-    social: {
-      linkedin: "#",
-      behance: "#"
-    }
-  },
-  {
-    id: 3,
-    name: "Elena Rodriguez",
-    role: "Senior Interior Designer",
-    bio: "Elena's innovative approach to interior spaces combines functionality with artistic vision, creating harmonious environments that inspire and delight.",
-    image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&q=80",
+    name: "Iñigo Alcarraz",
+    role: "Chief Architectural Visualizer & Co-Founder",
+    bio: "Iñigo is a specialist in architectural visualization and CGI. As a co-founder, he leverages his technical expertise to transform architectural concepts into compelling visual narratives, ensuring that each project is rendered with precision and clarity.",
+    image:
+      "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/images//Portrait_Inigo.png",
     social: {
       linkedin: "#",
       behance: "#",
-      twitter: "#"
-    }
+    },
+  },
+  {
+    id: 3,
+    name: "Bruno",
+    role: "Senior Architect & Rendering Specialist",
+    bio: "Bruno is an accomplished architect with a strong focus on digital rendering and environmental design. His expertise in spatial dynamics and materiality allows him to produce detailed and realistic visualizations that enhance architectural narratives.",
+    image:
+      "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/images//Portrait_Bruno.jpg",
+    social: {
+      linkedin: "#",
+      behance: "#",
+      twitter: "#",
+    },
   },
   {
     id: 4,
-    name: "Marcus Thompson",
-    role: "Technical Director",
-    bio: "Marcus oversees the technical aspects of our projects, ensuring that innovative design meets practical implementation with precision.",
-    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80",
+    name: "Nicolas Pedroza",
+    role: "Director of Technical Innovation",
+    bio: "Nicolas brings a robust technical background as an architect, overseeing all technical aspects of our projects. His commitment to precision and the adoption of advanced technologies ensures that every visualization meets the highest standards of quality.",
+    image:
+      "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/images//Portrait_Nico.jpg",
     social: {
       linkedin: "#",
-      behance: "#"
-    }
-  }
+      behance: "#",
+    },
+  },
 ];
 
-const SocialIcon = ({ type, link }: { type: keyof TeamMember['social']; link: string }) => {
-  const icons = {
-    linkedin: Linkedin,
-    behance: Behance,
-    twitter: Twitter
-  };
-  
-  const Icon = icons[type];
-  
-  return (
-    <motion.a
-      href={link}
-      target="_blank"
-      rel="noopener noreferrer"
-      whileHover={{ scale: 1.2 }}
-      whileTap={{ scale: 0.9 }}
-      className="text-gray-400 hover:text-accent transition-colors duration-300"
-    >
-      <Icon size={20} />
-    </motion.a>
-  );
-};
+// const SocialIcon = ({
+//   type,
+//   link,
+// }: {
+//   type: keyof TeamMember["social"];
+//   link: string;
+// }) => {
+//   const icons = {
+//     linkedin: Linkedin,
+//     behance: Behance,
+//     twitter: Twitter,
+//   };
+
+//   const Icon = icons[type];
+
+//   return (
+//     <motion.a
+//       href={link}
+//       target="_blank"
+//       rel="noopener noreferrer"
+//       whileHover={{ scale: 1.2 }}
+//       whileTap={{ scale: 0.9 }}
+//       className="text-gray-400 hover:text-accent transition-colors duration-300"
+//     >
+//       <Icon size={20} />
+//     </motion.a>
+//   );
+// };
 
 export const TeamSection = () => {
   const [ref, inView] = useInView({
@@ -99,9 +108,9 @@ export const TeamSection = () => {
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.2
-      }
-    }
+        staggerChildren: 0.2,
+      },
+    },
   };
 
   const itemVariants = {
@@ -110,9 +119,9 @@ export const TeamSection = () => {
       opacity: 1,
       y: 0,
       transition: {
-        duration: 0.5
-      }
-    }
+        duration: 0.5,
+      },
+    },
   };
 
   return (
@@ -125,17 +134,18 @@ export const TeamSection = () => {
         className="max-w-7xl mx-auto"
       >
         <div className="text-center mb-16">
-          <motion.h2 
+          <motion.h2
             className="text-4xl md:text-5xl font-playfair text-white mb-4"
             variants={itemVariants}
           >
             Meet Our Team
           </motion.h2>
-          <motion.p 
+          <motion.p
             className="text-gray-300 max-w-2xl mx-auto font-inter"
             variants={itemVariants}
           >
-            Passionate professionals dedicated to transforming architectural visions into reality
+            Passionate professionals dedicated to transforming architectural
+            visions into reality
           </motion.p>
         </div>
 
@@ -172,16 +182,16 @@ export const TeamSection = () => {
                 <p className="text-gray-400 text-sm mb-4 font-inter">
                   {member.bio}
                 </p>
-                
-                <div className="flex justify-center items-center space-x-4">
+
+                {/* <div className="flex justify-center items-center space-x-4">
                   {Object.entries(member.social).map(([platform, link]) => (
-                    <SocialIcon 
-                      key={platform} 
-                      type={platform as keyof TeamMember['social']} 
-                      link={link} 
+                    <SocialIcon
+                      key={platform}
+                      type={platform as keyof TeamMember["social"]}
+                      link={link}
                     />
                   ))}
-                </div>
+                </div> */}
               </div>
             </motion.div>
           ))}

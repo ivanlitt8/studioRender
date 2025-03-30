@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Phone, Mail, MapPin, Upload, Check, X } from "lucide-react";
+import { Phone, Mail, MapPin, Check, X, Upload } from "lucide-react";
+import { db } from "../../firebase-config";
+import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 const ACCEPTED_FILE_TYPES = [
@@ -18,9 +20,7 @@ const ACCEPTED_FILE_TYPES = [
 const contactSchema = z.object({
   fullName: z.string().min(2, "Full name is required"),
   email: z.string().email("Invalid email address"),
-  subject: z.string().min(2, "Subject is required"),
   projectType: z.enum(["exterior", "interior", "urban", "landscape", "other"]),
-  message: z.string().min(10, "Message must be at least 10 characters"),
   brief: z.string().optional(),
   files: z
     .custom<FileList>()
@@ -70,13 +70,23 @@ export const ContactSection = () => {
   const onSubmit = async (data: ContactFormData) => {
     setIsSubmitting(true);
     try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-      console.log("Form submitted:", data);
+      // Crear objeto con los datos del formulario
+      const contactData = {
+        fullName: data.fullName,
+        email: data.email,
+        projectType: data.projectType,
+        brief: data.brief || "",
+        createdAt: serverTimestamp(),
+      };
+
+      // Guardar en Firestore
+      const docRef = await addDoc(collection(db, "contacts"), contactData);
+      console.log("Documento creado con ID:", docRef.id);
+
       setSubmitStatus("success");
       reset();
     } catch (error) {
-      console.error("Error submitting form:", error);
+      console.error("Error al enviar el formulario:", error);
       setSubmitStatus("error");
     } finally {
       setIsSubmitting(false);
