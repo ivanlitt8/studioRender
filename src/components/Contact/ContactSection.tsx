@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import { useForm } from "react-hook-form";
@@ -7,6 +7,7 @@ import { z } from "zod";
 import { Phone, Mail, MapPin, Check, X, Upload } from "lucide-react";
 import { db } from "../../firebase-config";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import { supabase } from "../../lib/supabase";
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 const ACCEPTED_FILE_TYPES = [
@@ -53,10 +54,12 @@ export const ContactSection = () => {
   const [submitStatus, setSubmitStatus] = useState<"success" | "error" | null>(
     null
   );
+  const [uploadProgress, setUploadProgress] = useState<number>(0);
   const [ref, inView] = useInView({
     triggerOnce: true,
     threshold: 0.1,
   });
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
 
   const {
     register,
@@ -67,29 +70,188 @@ export const ContactSection = () => {
     resolver: zodResolver(contactSchema),
   });
 
+  // Verificar configuración de Supabase al montar
+  useEffect(() => {
+    const checkSupabaseConfig = async () => {
+      try {
+        // Listar buckets para verificar conexión
+        const { data: buckets, error } = await supabase.storage.listBuckets();
+
+        if (error) {
+          console.error("Error al conectar con Supabase:", error.message);
+        } else {
+          console.log(
+            "Buckets disponibles en Supabase:",
+            buckets.map((b) => b.name)
+          );
+
+          // Verificar permisos en el bucket "documents"
+          const { data: bucket, error: bucketError } = await supabase.storage
+            .from("documents")
+            .list();
+
+          if (bucketError) {
+            console.error(
+              "Error al acceder al bucket 'documents':",
+              bucketError.message
+            );
+          } else {
+            console.log("Archivos en bucket 'documents':", bucket);
+          }
+        }
+      } catch (e) {
+        console.error("Error al verificar configuración de Supabase:", e);
+      }
+    };
+
+    checkSupabaseConfig();
+  }, []);
+
+  const uploadFiles = async (files: FileList): Promise<string[]> => {
+    console.log("Iniciando subida de", files.length, "archivos");
+    setUploadProgress(10);
+
+    try {
+      const uploadPromises = Array.from(files).map(async (file, index) => {
+        console.log(
+          `Preparando archivo ${index + 1}/${files.length}:`,
+          file.name,
+          file.type,
+          file.size
+        );
+        const fileExt = file.name.split(".").pop();
+        const fileName = `${Math.random()
+          .toString(36)
+          .substring(2)}.${fileExt}`;
+        const filePath = `${fileName}`;
+
+        console.log(`Subiendo a ruta: ${filePath}`);
+        setUploadProgress(20 + (index / files.length) * 60);
+
+        const { error: uploadError } = await supabase.storage
+          .from("documents")
+          .upload(filePath, file, {
+            cacheControl: "3600",
+            upsert: false,
+          });
+
+        if (uploadError) {
+          console.error("Error al subir archivo:", uploadError);
+          throw new Error(`Error uploading file: ${uploadError.message}`);
+        }
+
+        console.log("Archivo subido correctamente, obteniendo URL pública");
+        const {
+          data: { publicUrl },
+        } = supabase.storage.from("documents").getPublicUrl(filePath);
+
+        console.log("URL pública obtenida:", publicUrl);
+        return publicUrl;
+      });
+
+      setUploadProgress(90);
+      const results = await Promise.all(uploadPromises);
+      console.log("Todas las URLs obtenidas:", results);
+      setUploadProgress(100);
+      return results;
+    } catch (error) {
+      console.error("Error en el proceso de subida:", error);
+      throw error;
+    }
+  };
+
   const onSubmit = async (data: ContactFormData) => {
     setIsSubmitting(true);
     try {
+      // Subir archivos si existen
+      let fileUrls: string[] = [];
+
+      if (selectedFiles.length > 0) {
+        console.log(
+          "Archivos seleccionados para subir:",
+          selectedFiles.map((f) => f.name)
+        );
+        const dataTransfer = new DataTransfer();
+        selectedFiles.forEach((file) => {
+          dataTransfer.items.add(file);
+        });
+        const fileList = dataTransfer.files;
+
+        fileUrls = await uploadFiles(fileList);
+        console.log("URLs de archivos obtenidas:", fileUrls);
+      } else {
+        console.log("No hay archivos para subir");
+      }
+
       // Crear objeto con los datos del formulario
       const contactData = {
         fullName: data.fullName,
         email: data.email,
         projectType: data.projectType,
         brief: data.brief || "",
+        fileUrls: fileUrls,
         createdAt: serverTimestamp(),
       };
+
+      console.log("Datos a guardar en Firestore:", contactData);
 
       // Guardar en Firestore
       const docRef = await addDoc(collection(db, "contacts"), contactData);
       console.log("Documento creado con ID:", docRef.id);
 
       setSubmitStatus("success");
+      setSelectedFiles([]);
       reset();
     } catch (error) {
       console.error("Error al enviar el formulario:", error);
       setSubmitStatus("error");
     } finally {
       setIsSubmitting(false);
+      setUploadProgress(0);
+    }
+  };
+
+  const onFileInputClick = () => {
+    document.getElementById("files")?.click();
+  };
+
+  const onDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (files && files.length > 0) {
+      console.log(
+        "Archivos seleccionados manualmente:",
+        Array.from(files).map((f) => f.name)
+      );
+      setSelectedFiles(Array.from(files));
+    }
+  };
+
+  const handleFileList = (files: FileList) => {
+    if (files && files.length > 0) {
+      console.log(
+        "Archivos procesados:",
+        Array.from(files).map((f) => f.name)
+      );
+      setSelectedFiles(Array.from(files));
+    }
+  };
+
+  const onDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    const { files } = e.dataTransfer;
+    if (files?.length) {
+      const fileInput = document.getElementById("files") as HTMLInputElement;
+      if (fileInput) {
+        fileInput.files = files;
+        handleFileList(files);
+      }
     }
   };
 
@@ -307,9 +469,12 @@ export const ContactSection = () => {
                     Upload Files (PDF, JPG, PNG, DWG, DXF - Max 10MB each)
                   </label>
                   <div
+                    onClick={onFileInputClick}
+                    onDragOver={onDragOver}
+                    onDrop={onDrop}
                     className={`w-full bg-primary/50 border ${
                       errors.files ? "border-red-500" : "border-gray-600"
-                    } rounded-lg px-4 py-6 text-center cursor-pointer hover:border-accent transition-colors`}
+                    } rounded-lg px-4 py-6 text-center cursor-pointer hover:border-accent transition-colors relative`}
                   >
                     <input
                       type="file"
@@ -318,11 +483,38 @@ export const ContactSection = () => {
                       multiple
                       accept=".pdf,.jpg,.jpeg,.png,.dwg,.dxf"
                       className="hidden"
+                      onChange={(e) => handleFileChange(e)}
                     />
-                    <Upload className="w-8 h-8 text-accent mx-auto mb-2" />
-                    <p className="text-gray-300">
-                      Drag and drop files here or click to browse
-                    </p>
+                    {selectedFiles.length > 0 ? (
+                      <div className="space-y-2">
+                        {selectedFiles.map((file, index) => (
+                          <div
+                            key={index}
+                            className="flex items-center justify-center text-gray-300"
+                          >
+                            <span className="truncate max-w-xs">
+                              {file.name}
+                            </span>
+                            <span className="ml-2 text-sm">
+                              ({(file.size / 1024 / 1024).toFixed(2)} MB)
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <>
+                        <Upload className="w-8 h-8 text-accent mx-auto mb-2" />
+                        <p className="text-gray-300">
+                          Drag and drop files here or click to browse
+                        </p>
+                      </>
+                    )}
+                    {uploadProgress > 0 && uploadProgress < 100 && (
+                      <div
+                        className="absolute bottom-0 left-0 h-1 bg-accent"
+                        style={{ width: `${uploadProgress}%` }}
+                      />
+                    )}
                   </div>
                   {errors.files && (
                     <p className="mt-1 text-red-500 text-sm">
