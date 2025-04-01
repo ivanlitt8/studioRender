@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
 
 const navItems = [
   { name: "Home", href: "#home" },
-  { name: "About", href: "#about" },
+  { name: "About Us", href: "#about" },
   { name: "Services", href: "#services" },
   { name: "Gallery", href: "#gallery" },
-  { name: "Team", href: "#team" },
-  { name: "Contact", href: "#contact" },
+  //{ name: "Team", href: "#team" },
+  { name: "Request a Quote", href: "#contact" },
 ];
 
 export const Navbar = () => {
