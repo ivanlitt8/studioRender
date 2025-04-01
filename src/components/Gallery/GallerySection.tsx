@@ -1,15 +1,23 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Masonry from "react-masonry-css";
 import { X } from "lucide-react";
 import { useInView } from "react-intersection-observer";
 
-type Category = "all" | "exterior" | "interior" | "urban" | "nature";
+type MainCategory = "all" | "exterior" | "interior";
+type SubCategory =
+  | "modern"
+  | "classic"
+  | "minimalist"
+  | "contemporary"
+  | "industrial"
+  | "rustic";
 
 interface Project {
   id: number;
   title: string;
-  category: Category;
+  mainCategory: MainCategory;
+  subCategory?: SubCategory;
   imageUrl: string;
   description: string;
 }
@@ -18,7 +26,8 @@ const projects: Project[] = [
   {
     id: 1,
     title: "Modern Villa Exterior",
-    category: "exterior",
+    mainCategory: "exterior",
+    subCategory: "modern",
     imageUrl:
       "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80",
     description: "Contemporary villa design with sustainable materials",
@@ -26,52 +35,87 @@ const projects: Project[] = [
   {
     id: 2,
     title: "Minimalist Living Room",
-    category: "interior",
+    mainCategory: "interior",
+    subCategory: "minimalist",
     imageUrl:
       "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?q=80&w=2158&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     description: "Open concept living space with natural light",
   },
   {
     id: 3,
-    title: "Urban Park Complex",
-    category: "urban",
+    title: "Classic Urban Villa",
+    mainCategory: "exterior",
+    subCategory: "classic",
     imageUrl:
       "https://images.unsplash.com/photo-1573108724029-4c46571d6490?auto=format&fit=crop&q=80",
-    description: "Mixed-use development with green spaces",
+    description: "Traditional exterior design with modern amenities",
   },
   {
     id: 4,
-    title: "Eco-Resort",
-    category: "nature",
+    title: "Contemporary Mountain Retreat",
+    mainCategory: "exterior",
+    subCategory: "contemporary",
     imageUrl:
       "https://images.unsplash.com/photo-1470723710355-95304d8aece4?auto=format&fit=crop&q=80",
-    description: "Sustainable resort integrated with natural surroundings",
+    description: "Sustainable retreat integrated with mountain surroundings",
   },
   {
     id: 5,
-    title: "Modern Office Interior",
-    category: "interior",
+    title: "Industrial Loft Interior",
+    mainCategory: "interior",
+    subCategory: "industrial",
     imageUrl:
       "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80",
-    description: "Contemporary workspace design",
+    description: "Raw materials and open space design",
   },
   {
     id: 6,
-    title: "Urban Residential Tower",
-    category: "urban",
+    title: "Rustic Cabin Interior",
+    mainCategory: "interior",
+    subCategory: "rustic",
     imageUrl:
       "https://images.unsplash.com/photo-1545158535-c3f7168c28b6?auto=format&fit=crop&q=80",
-    description: "High-rise residential complex",
+    description: "Warm and cozy interior with natural wood elements",
+  },
+  {
+    id: 7,
+    title: "Contemporary Interior Lounge",
+    mainCategory: "interior",
+    subCategory: "contemporary",
+    imageUrl:
+      "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?q=80&w=2158&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    description: "Modern lounge space with artistic elements",
+  },
+  {
+    id: 8,
+    title: "Modern Beach House",
+    mainCategory: "exterior",
+    subCategory: "modern",
+    imageUrl:
+      "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80",
+    description: "Sleek design with panoramic ocean views",
   },
 ];
 
-const categories = [
+const mainCategories = [
   { id: "all", label: "All Projects" },
   { id: "exterior", label: "Exterior" },
   { id: "interior", label: "Interior" },
-  { id: "urban", label: "Urban" },
-  { id: "nature", label: "Nature" },
 ];
+
+const subCategories = {
+  exterior: [
+    { id: "modern", label: "Modern" },
+    { id: "classic", label: "Classic" },
+    { id: "contemporary", label: "Contemporary" },
+  ],
+  interior: [
+    { id: "minimalist", label: "Minimalist" },
+    { id: "industrial", label: "Industrial" },
+    { id: "rustic", label: "Rustic" },
+    { id: "contemporary", label: "Contemporary" },
+  ],
+};
 
 const breakpointColumns = {
   default: 3,
@@ -80,17 +124,28 @@ const breakpointColumns = {
 };
 
 export const GallerySection = () => {
-  const [selectedCategory, setSelectedCategory] = useState<Category>("all");
+  const [selectedMainCategory, setSelectedMainCategory] =
+    useState<MainCategory>("all");
+  const [selectedSubCategory, setSelectedSubCategory] =
+    useState<SubCategory | null>(null);
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [ref, inView] = useInView({
     triggerOnce: true,
     threshold: 0.1,
   });
 
-  const filteredProjects = projects.filter(
-    (project) =>
-      selectedCategory === "all" || project.category === selectedCategory
-  );
+  // Reset subcategory when main category changes
+  useEffect(() => {
+    setSelectedSubCategory(null);
+  }, [selectedMainCategory]);
+
+  const filteredProjects = projects.filter((project) => {
+    if (selectedMainCategory === "all") return true;
+    if (project.mainCategory !== selectedMainCategory) return false;
+    if (selectedSubCategory && project.subCategory !== selectedSubCategory)
+      return false;
+    return true;
+  });
 
   return (
     <section id="gallery" className="py-20 px-4 bg-secondary min-h-screen">
@@ -108,17 +163,19 @@ export const GallerySection = () => {
           Explore our diverse collection of architectural projects
         </p>
 
-        {/* Category Filter */}
-        <div className="flex flex-wrap justify-center gap-4 mb-12">
-          {categories.map((category) => (
+        {/* Main Categories */}
+        <div className="flex flex-wrap justify-center gap-4 mb-6">
+          {mainCategories.map((category) => (
             <motion.button
               key={category.id}
-              onClick={() => setSelectedCategory(category.id as Category)}
-              className={`px-6 py-2 rounded-full font-inter text-sm transition-all
+              onClick={() =>
+                setSelectedMainCategory(category.id as MainCategory)
+              }
+              className={`px-8 py-3 rounded-full font-inter text-sm transition-all duration-300
                 ${
-                  selectedCategory === category.id
-                    ? "bg-accent text-white"
-                    : "bg-gray-800 text-gray-300 hover:bg-gray-700"
+                  selectedMainCategory === category.id
+                    ? "bg-accent text-white shadow-md shadow-accent/30"
+                    : "bg-gray-800 text-gray-300 hover:bg-gray-700 hover:text-white"
                 }`}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
@@ -127,6 +184,56 @@ export const GallerySection = () => {
             </motion.button>
           ))}
         </div>
+
+        {/* Sub Categories */}
+        <AnimatePresence>
+          {selectedMainCategory !== "all" && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.3 }}
+              className="flex flex-wrap justify-center gap-3 mb-12 overflow-hidden"
+            >
+              <motion.button
+                key="all-sub"
+                onClick={() => setSelectedSubCategory(null)}
+                className={`px-6 py-2 rounded-full font-inter text-xs transition-all duration-300
+                  ${
+                    selectedSubCategory === null
+                      ? "bg-accent/70 text-white"
+                      : "bg-gray-700 text-gray-300 hover:bg-gray-600"
+                  }`}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                All{" "}
+                {selectedMainCategory === "exterior"
+                  ? "Exteriors"
+                  : "Interiors"}
+              </motion.button>
+
+              {subCategories[selectedMainCategory].map((subCategory) => (
+                <motion.button
+                  key={subCategory.id}
+                  onClick={() =>
+                    setSelectedSubCategory(subCategory.id as SubCategory)
+                  }
+                  className={`px-6 py-2 rounded-full font-inter text-xs transition-all duration-300
+                    ${
+                      selectedSubCategory === subCategory.id
+                        ? "bg-accent/70 text-white"
+                        : "bg-gray-700 text-gray-300 hover:bg-gray-600"
+                    }`}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  {subCategory.label}
+                </motion.button>
+              ))}
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* Gallery Grid */}
         <Masonry
@@ -161,6 +268,11 @@ export const GallerySection = () => {
                       {project.title}
                     </h3>
                     <p className="text-sm font-inter">{project.description}</p>
+                    {project.subCategory && (
+                      <span className="inline-block mt-2 px-3 py-1 bg-accent/80 rounded-full text-xs">
+                        {project.subCategory}
+                      </span>
+                    )}
                   </div>
                 </div>
               </motion.div>
@@ -203,6 +315,11 @@ export const GallerySection = () => {
                   <p className="text-gray-300 font-inter">
                     {selectedProject.description}
                   </p>
+                  {selectedProject.subCategory && (
+                    <span className="inline-block mt-3 px-3 py-1 bg-accent/80 rounded-full text-xs">
+                      {selectedProject.subCategory}
+                    </span>
+                  )}
                 </div>
               </motion.div>
             </motion.div>
