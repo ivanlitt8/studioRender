@@ -8,6 +8,7 @@ import { Phone, Mail, MapPin, Check, X, Upload } from "lucide-react";
 import { db } from "../../firebase-config";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { supabase } from "../../lib/supabase";
+import { sendEmail } from "../../lib/email";
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 const ACCEPTED_FILE_TYPES = [
@@ -198,6 +199,25 @@ export const ContactSection = () => {
       // Guardar en Firestore
       const docRef = await addDoc(collection(db, "contacts"), contactData);
       console.log("Documento creado con ID:", docRef.id);
+
+      // Enviar correo electrónico usando nuestro servicio
+      const emailResult = await sendEmail({
+        fullName: data.fullName,
+        email: data.email,
+        projectType: data.projectType,
+        brief: data.brief,
+        fileUrls: fileUrls,
+      });
+
+      if (!emailResult.success) {
+        console.warn(
+          "El correo electrónico no pudo ser enviado:",
+          emailResult.message
+        );
+        // Continuamos el flujo aunque falle el envío de correo
+      } else {
+        console.log("Correo electrónico enviado con éxito");
+      }
 
       setSubmitStatus("success");
       setSelectedFiles([]);
