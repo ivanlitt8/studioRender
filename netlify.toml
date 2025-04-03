@@ -15,7 +15,7 @@
 
 [functions]
   node_bundler = "esbuild"
-  external_node_modules = ["nodemailer"]
+  included_files = ["netlify/functions/node_modules/**"]
 
 [[redirects]]
   from = "/api/*"
