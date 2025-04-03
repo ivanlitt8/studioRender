@@ -7,8 +7,8 @@ import { z } from "zod";
 import { Phone, Mail, MapPin, Check, X, Upload } from "lucide-react";
 import { db } from "../../firebase-config";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
-import { supabase } from "../../lib/supabase";
-import { sendEmail } from "../../lib/email";
+import { supabase } from "../../lib/supabase.js";
+import { sendEmail } from "../../lib/email.js";
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 const ACCEPTED_FILE_TYPES = [
