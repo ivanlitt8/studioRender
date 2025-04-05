@@ -29,7 +29,7 @@ const projects: Project[] = [
     mainCategory: "exterior",
     subCategory: "modern",
     imageUrl:
-      "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80",
+      "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//1a.png",
     description: "Contemporary villa design with sustainable materials",
   },
   {
@@ -38,7 +38,7 @@ const projects: Project[] = [
     mainCategory: "interior",
     subCategory: "minimalist",
     imageUrl:
-      "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?q=80&w=2158&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//2a.png",
     description: "Open concept living space with natural light",
   },
   {
@@ -47,7 +47,7 @@ const projects: Project[] = [
     mainCategory: "exterior",
     subCategory: "classic",
     imageUrl:
-      "https://images.unsplash.com/photo-1573108724029-4c46571d6490?auto=format&fit=crop&q=80",
+      "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//360%20Interior.png",
     description: "Traditional exterior design with modern amenities",
   },
   {
@@ -56,7 +56,7 @@ const projects: Project[] = [
     mainCategory: "exterior",
     subCategory: "contemporary",
     imageUrl:
-      "https://images.unsplash.com/photo-1470723710355-95304d8aece4?auto=format&fit=crop&q=80",
+      "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//3a.png",
     description: "Sustainable retreat integrated with mountain surroundings",
   },
   {
@@ -65,7 +65,7 @@ const projects: Project[] = [
     mainCategory: "interior",
     subCategory: "industrial",
     imageUrl:
-      "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80",
+      "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//7.jpg",
     description: "Raw materials and open space design",
   },
   {
@@ -74,7 +74,7 @@ const projects: Project[] = [
     mainCategory: "interior",
     subCategory: "rustic",
     imageUrl:
-      "https://images.unsplash.com/photo-1545158535-c3f7168c28b6?auto=format&fit=crop&q=80",
+      "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//Escena%201.png",
     description: "Warm and cozy interior with natural wood elements",
   },
   {
@@ -83,7 +83,7 @@ const projects: Project[] = [
     mainCategory: "interior",
     subCategory: "contemporary",
     imageUrl:
-      "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?q=80&w=2158&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//Escena%202.png",
     description: "Modern lounge space with artistic elements",
   },
   {
@@ -92,7 +92,178 @@ const projects: Project[] = [
     mainCategory: "exterior",
     subCategory: "modern",
     imageUrl:
-      "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80",
+      "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//Escena%202_upscale01.png",
+    description: "Sleek design with panoramic ocean views",
+  },
+  {
+    id: 8,
+    title: "Modern Beach House",
+    mainCategory: "exterior",
+    subCategory: "modern",
+    imageUrl:
+      "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//Escena%203.png",
+    description: "Sleek design with panoramic ocean views",
+  },
+  {
+    id: 9,
+    title: "Modern Beach House",
+    mainCategory: "exterior",
+    subCategory: "modern",
+    imageUrl:
+      "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//Escena%203_upscale01.png",
+    description: "Sleek design with panoramic ocean views",
+  },
+  {
+    id: 10,
+    title: "Modern Beach House",
+    mainCategory: "exterior",
+    subCategory: "modern",
+    imageUrl:
+      "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//Escena%204_upscale01.png",
+    description: "Sleek design with panoramic ocean views",
+  },
+  {
+    id: 11,
+    title: "Modern Beach House",
+    mainCategory: "exterior",
+    subCategory: "modern",
+    imageUrl:
+      "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//Escena%2055_upscale01.png",
+    description: "Sleek design with panoramic ocean views",
+  },
+  {
+    id: 12,
+    title: "Modern Beach House",
+    mainCategory: "exterior",
+    subCategory: "modern",
+    imageUrl:
+      "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//Escena%2056_upscale01.png",
+    description: "Sleek design with panoramic ocean views",
+  },
+  {
+    id: 13,
+    title: "Modern Beach House",
+    mainCategory: "exterior",
+    subCategory: "modern",
+    imageUrl:
+      "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//fente.png",
+    description: "Sleek design with panoramic ocean views",
+  },
+  {
+    id: 14,
+    title: "Modern Beach House",
+    mainCategory: "exterior",
+    subCategory: "modern",
+    imageUrl:
+      "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//Fondo.png",
+    description: "Sleek design with panoramic ocean views",
+  },
+  {
+    id: 15,
+    title: "Modern Beach House",
+    mainCategory: "exterior",
+    subCategory: "modern",
+    imageUrl:
+      "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//Fondo_upscale01.png",
+    description: "Sleek design with panoramic ocean views",
+  },
+  {
+    id: 16,
+    title: "Modern Beach House",
+    mainCategory: "exterior",
+    subCategory: "modern",
+    imageUrl:
+      "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//Frente.png",
+    description: "Sleek design with panoramic ocean views",
+  },
+  {
+    id: 17,
+    title: "Modern Beach House",
+    mainCategory: "exterior",
+    subCategory: "modern",
+    imageUrl:
+      "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//Frente_upscale01.png",
+    description: "Sleek design with panoramic ocean views",
+  },
+  {
+    id: 18,
+    title: "Modern Beach House",
+    mainCategory: "exterior",
+    subCategory: "modern",
+    imageUrl:
+      "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//Imagen(1)_upscale01.png",
+    description: "Sleek design with panoramic ocean views",
+  },
+  {
+    id: 14,
+    title: "Modern Beach House",
+    mainCategory: "exterior",
+    subCategory: "modern",
+    imageUrl:
+      "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//Imagen_upscale01.png",
+    description: "Sleek design with panoramic ocean views",
+  },
+  {
+    id: 19,
+    title: "Modern Beach House",
+    mainCategory: "exterior",
+    subCategory: "modern",
+    imageUrl:
+      "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//INT1.jpg",
+    description: "Sleek design with panoramic ocean views",
+  },
+  {
+    id: 20,
+    title: "Modern Beach House",
+    mainCategory: "exterior",
+    subCategory: "modern",
+    imageUrl:
+      "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//INT2.jpg",
+    description: "Sleek design with panoramic ocean views",
+  },
+  {
+    id: 21,
+    title: "Modern Beach House",
+    mainCategory: "exterior",
+    subCategory: "modern",
+    imageUrl:
+      "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//Interior.png",
+    description: "Sleek design with panoramic ocean views",
+  },
+  {
+    id: 22,
+    title: "Modern Beach House",
+    mainCategory: "exterior",
+    subCategory: "modern",
+    imageUrl:
+      "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//Interior_upscale01.png",
+    description: "Sleek design with panoramic ocean views",
+  },
+  {
+    id: 23,
+    title: "Modern Beach House",
+    mainCategory: "exterior",
+    subCategory: "modern",
+    imageUrl:
+      "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//peatonal.png",
+    description: "Sleek design with panoramic ocean views",
+  },
+  {
+    id: 24,
+    title: "Modern Beach House",
+    mainCategory: "exterior",
+    subCategory: "modern",
+    imageUrl:
+      "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//perspectiva%201%20dia.png",
+    description: "Sleek design with panoramic ocean views",
+  },
+  {
+    id: 25,
+    title: "Modern Beach House",
+    mainCategory: "exterior",
+    subCategory: "modern",
+    imageUrl:
+      "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//perspectiva%201.png",
     description: "Sleek design with panoramic ocean views",
   },
 ];
