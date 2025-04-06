@@ -29,7 +29,7 @@ const projects: Project[] = [
     mainCategory: "exterior",
     subCategory: "modern",
     imageUrl:
-      "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//1a.png",
+      "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//1a.webp",
     description: "Contemporary villa design with sustainable materials",
   },
   {
@@ -38,7 +38,7 @@ const projects: Project[] = [
     mainCategory: "interior",
     subCategory: "minimalist",
     imageUrl:
-      "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//2a.png",
+      "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//2a.webp",
     description: "Open concept living space with natural light",
   },
   {
@@ -47,7 +47,7 @@ const projects: Project[] = [
     mainCategory: "exterior",
     subCategory: "classic",
     imageUrl:
-      "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//360%20Interior.png",
+      "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//360%20Interior.webp",
     description: "Traditional exterior design with modern amenities",
   },
   {
@@ -56,7 +56,7 @@ const projects: Project[] = [
     mainCategory: "exterior",
     subCategory: "contemporary",
     imageUrl:
-      "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//3a.png",
+      "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//3a.webp",
     description: "Sustainable retreat integrated with mountain surroundings",
   },
   {
@@ -65,7 +65,7 @@ const projects: Project[] = [
     mainCategory: "interior",
     subCategory: "industrial",
     imageUrl:
-      "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//7.jpg",
+      "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//7.webp",
     description: "Raw materials and open space design",
   },
   {
@@ -74,7 +74,7 @@ const projects: Project[] = [
     mainCategory: "interior",
     subCategory: "rustic",
     imageUrl:
-      "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//Escena%201.png",
+      "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//Escena%201%20(1).webp",
     description: "Warm and cozy interior with natural wood elements",
   },
   {
@@ -83,7 +83,7 @@ const projects: Project[] = [
     mainCategory: "interior",
     subCategory: "contemporary",
     imageUrl:
-      "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//Escena%202.png",
+      "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//Escena%201.webp",
     description: "Modern lounge space with artistic elements",
   },
   {
@@ -92,7 +92,7 @@ const projects: Project[] = [
     mainCategory: "exterior",
     subCategory: "modern",
     imageUrl:
-      "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//Escena%202_upscale01.png",
+      "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//Escena%202.webp",
     description: "Sleek design with panoramic ocean views",
   },
   {
@@ -101,7 +101,7 @@ const projects: Project[] = [
     mainCategory: "exterior",
     subCategory: "modern",
     imageUrl:
-      "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//Escena%203.png",
+      "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//Escena%203.webp",
     description: "Sleek design with panoramic ocean views",
   },
   {
@@ -110,7 +110,7 @@ const projects: Project[] = [
     mainCategory: "exterior",
     subCategory: "modern",
     imageUrl:
-      "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//Escena%203_upscale01.png",
+      "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//Escena%204_upscale01.webp",
     description: "Sleek design with panoramic ocean views",
   },
   {
@@ -119,7 +119,7 @@ const projects: Project[] = [
     mainCategory: "exterior",
     subCategory: "modern",
     imageUrl:
-      "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//Escena%204_upscale01.png",
+      "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//Escena%2055_upscale01.webp",
     description: "Sleek design with panoramic ocean views",
   },
   {
@@ -128,7 +128,7 @@ const projects: Project[] = [
     mainCategory: "exterior",
     subCategory: "modern",
     imageUrl:
-      "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//Escena%2055_upscale01.png",
+      "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//Escena%2056_upscale01.webp",
     description: "Sleek design with panoramic ocean views",
   },
   {
@@ -137,7 +137,7 @@ const projects: Project[] = [
     mainCategory: "exterior",
     subCategory: "modern",
     imageUrl:
-      "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//Escena%2056_upscale01.png",
+      "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//fente.webp",
     description: "Sleek design with panoramic ocean views",
   },
   {
@@ -146,7 +146,7 @@ const projects: Project[] = [
     mainCategory: "exterior",
     subCategory: "modern",
     imageUrl:
-      "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//fente.png",
+      "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//Fondo.webp",
     description: "Sleek design with panoramic ocean views",
   },
   {
@@ -155,7 +155,7 @@ const projects: Project[] = [
     mainCategory: "exterior",
     subCategory: "modern",
     imageUrl:
-      "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//Fondo.png",
+      "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//Frente.webp",
     description: "Sleek design with panoramic ocean views",
   },
   {
@@ -164,7 +164,7 @@ const projects: Project[] = [
     mainCategory: "exterior",
     subCategory: "modern",
     imageUrl:
-      "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//Fondo_upscale01.png",
+      "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//Imagen(1)_upscale01.webp",
     description: "Sleek design with panoramic ocean views",
   },
   {
@@ -173,7 +173,7 @@ const projects: Project[] = [
     mainCategory: "exterior",
     subCategory: "modern",
     imageUrl:
-      "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//Frente.png",
+      "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//Imagen_upscale01.webp",
     description: "Sleek design with panoramic ocean views",
   },
   {
@@ -182,7 +182,7 @@ const projects: Project[] = [
     mainCategory: "exterior",
     subCategory: "modern",
     imageUrl:
-      "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//Frente_upscale01.png",
+      "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//INT1.webp",
     description: "Sleek design with panoramic ocean views",
   },
   {
@@ -191,16 +191,7 @@ const projects: Project[] = [
     mainCategory: "exterior",
     subCategory: "modern",
     imageUrl:
-      "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//Imagen(1)_upscale01.png",
-    description: "Sleek design with panoramic ocean views",
-  },
-  {
-    id: 14,
-    title: "Modern Beach House",
-    mainCategory: "exterior",
-    subCategory: "modern",
-    imageUrl:
-      "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//Imagen_upscale01.png",
+      "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//INT2.webp",
     description: "Sleek design with panoramic ocean views",
   },
   {
@@ -209,7 +200,7 @@ const projects: Project[] = [
     mainCategory: "exterior",
     subCategory: "modern",
     imageUrl:
-      "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//INT1.jpg",
+      "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//Interior.webp",
     description: "Sleek design with panoramic ocean views",
   },
   {
@@ -218,7 +209,7 @@ const projects: Project[] = [
     mainCategory: "exterior",
     subCategory: "modern",
     imageUrl:
-      "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//INT2.jpg",
+      "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//peatonal.webp",
     description: "Sleek design with panoramic ocean views",
   },
   {
@@ -227,7 +218,7 @@ const projects: Project[] = [
     mainCategory: "exterior",
     subCategory: "modern",
     imageUrl:
-      "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//Interior.png",
+      "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//perspectiva%201%20dia.webp",
     description: "Sleek design with panoramic ocean views",
   },
   {
@@ -236,34 +227,7 @@ const projects: Project[] = [
     mainCategory: "exterior",
     subCategory: "modern",
     imageUrl:
-      "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//Interior_upscale01.png",
-    description: "Sleek design with panoramic ocean views",
-  },
-  {
-    id: 23,
-    title: "Modern Beach House",
-    mainCategory: "exterior",
-    subCategory: "modern",
-    imageUrl:
-      "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//peatonal.png",
-    description: "Sleek design with panoramic ocean views",
-  },
-  {
-    id: 24,
-    title: "Modern Beach House",
-    mainCategory: "exterior",
-    subCategory: "modern",
-    imageUrl:
-      "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//perspectiva%201%20dia.png",
-    description: "Sleek design with panoramic ocean views",
-  },
-  {
-    id: 25,
-    title: "Modern Beach House",
-    mainCategory: "exterior",
-    subCategory: "modern",
-    imageUrl:
-      "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//perspectiva%201.png",
+      "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//perspectiva%201.jpg",
     description: "Sleek design with panoramic ocean views",
   },
 ];
