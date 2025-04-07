@@ -67,7 +67,7 @@ export const Footer = () => {
           <motion.div variants={itemVariants} className="space-y-4">
             <div className="flex items-center space-x-2 text-white mb-4">
               <Building2 className="w-8 h-8 text-accent" />
-              <span className="text-2xl font-playfair">Studio</span>
+              <span className="text-2xl font-playfair">R3ALIM</span>
             </div>
             <p className="text-gray-400 font-inter">
               Crafting exceptional architectural experiences through innovative

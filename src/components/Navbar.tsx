@@ -8,7 +8,6 @@ const navItems = [
   { name: "Services", href: "#services" },
   { name: "Gallery", href: "#gallery" },
   //{ name: "Team", href: "#team" },
-  { name: "Request a Quote", href: "#contact" },
 ];
 
 export const Navbar = () => {
@@ -39,11 +38,11 @@ export const Navbar = () => {
             animate={{ opacity: 1, x: 0 }}
             className="text-white font-playfair text-2xl"
           >
-            Studio
+            R3ALIM
           </motion.div>
 
           {/* Desktop Menu */}
-          <div className="hidden md:flex space-x-8">
+          <div className="hidden md:flex items-center space-x-8">
             {navItems.map((item) => (
               <motion.a
                 key={item.name}
@@ -57,6 +56,15 @@ export const Navbar = () => {
                 <span className="absolute bottom-0 left-0 w-full h-0.5 bg-accent transform scale-x-0 transition-transform duration-300 group-hover:scale-x-100" />
               </motion.a>
             ))}
+            <motion.a
+              href="#contact"
+              className="bg-accent text-white px-6 py-2 rounded-md hover:bg-accent/90 transition-colors font-inter text-sm"
+              whileHover={{ scale: 1.05 }}
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+            >
+              Request Quote
+            </motion.a>
           </div>
 
           {/* Mobile Menu Button */}
@@ -95,6 +103,14 @@ export const Navbar = () => {
                   {item.name}
                 </motion.a>
               ))}
+              <motion.a
+                href="#contact"
+                className="bg-accent text-white px-6 py-3 rounded-md hover:bg-accent/90 transition-colors font-inter text-lg mt-4 text-center"
+                whileHover={{ scale: 1.05 }}
+                onClick={() => setIsOpen(false)}
+              >
+                Request Quote
+              </motion.a>
             </div>
           </motion.div>
         )}

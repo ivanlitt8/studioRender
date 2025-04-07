@@ -50,7 +50,7 @@ exports.handler = async function(event, context) {
 
     // Enviar correo
     await transporter.sendMail({
-      from: `"Studio Architectural" <${process.env.SMTP_USER}>`,
+      from: `"R3ALIM Architectural" <${process.env.SMTP_USER}>`,
       to: process.env.RECIPIENT_EMAIL || process.env.SMTP_USER,
       subject: `Nuevo mensaje de formulario: ${projectType}`,
       text: `

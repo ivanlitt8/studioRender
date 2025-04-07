@@ -319,7 +319,7 @@ export const ContactSection = () => {
                 </div>
                 <div className="flex items-center text-gray-300">
                   <Mail className="w-5 h-5 text-accent mr-4" />
-                  <span>contact@studio.com</span>
+                  <span>contact@r3alim.com</span>
                 </div>
                 <div className="flex items-center text-gray-300">
                   <MapPin className="w-5 h-5 text-accent mr-4" />
@@ -327,7 +327,7 @@ export const ContactSection = () => {
                 </div>
               </div>
 
-              <div className="mt-8 pt-8 border-t border-gray-700">
+              {/* <div className="mt-8 pt-8 border-t border-gray-700">
                 <h4 className="text-white font-playfair mb-4">Office Hours</h4>
                 <p className="text-gray-300">
                   Monday - Friday: 9:00 AM - 6:00 PM
@@ -336,7 +336,7 @@ export const ContactSection = () => {
                   <br />
                   Sunday: Closed
                 </p>
-              </div>
+              </div> */}
             </div>
           </div>
 
@@ -347,7 +347,7 @@ export const ContactSection = () => {
               className="bg-secondary rounded-lg p-8"
             >
               <h3 className="text-2xl font-playfair text-white mb-6">
-                Request A Quote
+                Request Quote
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* Project Type */}
