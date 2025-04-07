@@ -22,7 +22,7 @@ const teamMembers: TeamMember[] = [
     role: "CEO, Creative Director & Co-Founder",
     bio: "With extensive experience in business strategy and creative design, Juan drives our vision with a balanced approach to innovation and operational excellence. As a co-founder, he is responsible for setting the strategic direction and nurturing a culture of creative problem-solving.",
     image:
-      "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/images//Portrait_Juan.jpeg",
+      "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/images//Portrait_Juan%20(1).jpeg",
     social: {
       linkedin: "#",
       behance: "#",
@@ -35,7 +35,7 @@ const teamMembers: TeamMember[] = [
     role: "Chief Architectural Visualizer & Co-Founder",
     bio: "Iñigo is a specialist in architectural visualization and CGI. As a co-founder, he leverages his technical expertise to transform architectural concepts into compelling visual narratives, ensuring that each project is rendered with precision and clarity.",
     image:
-      "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/images//Portrait_Inigo.png",
+      "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/images//Portrait_Inigo2.jpg",
     social: {
       linkedin: "#",
       behance: "#",
@@ -60,7 +60,7 @@ const teamMembers: TeamMember[] = [
     role: "Director of Technical Innovation",
     bio: "Nicolas brings a robust technical background as an architect, overseeing all technical aspects of our projects. His commitment to precision and the adoption of advanced technologies ensures that every visualization meets the highest standards of quality.",
     image:
-      "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/images//Portrait_Nico.jpg",
+      "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/images//Portrait_Nico%20(1).jpg",
     social: {
       linkedin: "#",
       behance: "#",
@@ -160,7 +160,7 @@ export const TeamSection = () => {
                 <motion.div
                   whileHover={{ scale: 1.05 }}
                   transition={{ duration: 0.3 }}
-                  className="aspect-[3/4]"
+                  className="aspect-[3/4] relative"
                 >
                   <img
                     src={member.image}
@@ -168,7 +168,11 @@ export const TeamSection = () => {
                     className="w-full h-full object-cover"
                     loading="lazy"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/70 to-black/60 opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center p-6">
+                    <p className="text-white text-sm font-inter opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-100 text-center">
+                      {member.bio}
+                    </p>
+                  </div>
                 </motion.div>
               </div>
 
@@ -176,22 +180,7 @@ export const TeamSection = () => {
                 <h3 className="text-xl font-playfair text-white mb-1">
                   {member.name}
                 </h3>
-                <p className="text-accent font-inter text-sm mb-2">
-                  {member.role}
-                </p>
-                <p className="text-gray-400 text-sm mb-4 font-inter">
-                  {member.bio}
-                </p>
-
-                {/* <div className="flex justify-center items-center space-x-4">
-                  {Object.entries(member.social).map(([platform, link]) => (
-                    <SocialIcon
-                      key={platform}
-                      type={platform as keyof TeamMember["social"]}
-                      link={link}
-                    />
-                  ))}
-                </div> */}
+                <p className="text-accent font-inter text-sm">{member.role}</p>
               </div>
             </motion.div>
           ))}
