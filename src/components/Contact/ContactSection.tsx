@@ -321,10 +321,6 @@ export const ContactSection = () => {
                   <Mail className="w-5 h-5 text-accent mr-4" />
                   <span>contact@r3alim.com</span>
                 </div>
-                <div className="flex items-center text-gray-300">
-                  <MapPin className="w-5 h-5 text-accent mr-4" />
-                  <span>123 Design Street, Creative City, 12345</span>
-                </div>
               </div>
 
               {/* <div className="mt-8 pt-8 border-t border-gray-700">
