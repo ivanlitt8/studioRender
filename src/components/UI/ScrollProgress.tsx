@@ -7,7 +7,7 @@ interface Section {
 
 export const ScrollProgress = () => {
   const [activeSection, setActiveSection] = useState("");
-  const [scrollProgress, setScrollProgress] = useState(0);
+  // const [scrollProgress, setScrollProgress] = useState(0);
 
   // Definir las secciones directamente en el componente
   const sections: Section[] = [
@@ -22,15 +22,15 @@ export const ScrollProgress = () => {
     const calculateScrollProgress = () => {
       // Cálculo del progreso global de scroll
       const windowHeight = window.innerHeight;
-      const documentHeight = document.documentElement.scrollHeight;
-      const scrollTop = window.scrollY;
+      // const documentHeight = document.documentElement.scrollHeight;
+      // const scrollTop = window.scrollY;
 
-      const totalScrollable = documentHeight - windowHeight;
-      const progress = Math.min(
-        Math.max((scrollTop / totalScrollable) * 100, 0),
-        100
-      );
-      setScrollProgress(progress);
+      // const totalScrollable = documentHeight - windowHeight;
+      // const progress = Math.min(
+      //   Math.max((scrollTop / totalScrollable) * 100, 0),
+      //   100
+      // );
+      // setScrollProgress(progress);
 
       // Determinar la sección activa
       for (const section of sections) {
@@ -72,12 +72,12 @@ export const ScrollProgress = () => {
   return (
     <aside className="fixed right-5 top-1/2 transform -translate-y-1/2 z-50 flex flex-col items-center">
       {/* Barra de progreso vertical */}
-      <div className="h-[50vh] w-0.5 bg-gray-700 relative">
+      {/* <div className="h-[50vh] w-0.5 bg-gray-700 relative">
         <div
           className="absolute top-0 left-0 w-full bg-accent origin-top transition-all duration-300"
           style={{ height: `${scrollProgress}%` }}
         />
-      </div>
+      </div> */}
 
       {/* Indicadores de sección */}
       <div className="flex flex-col items-center gap-4 mt-4">
