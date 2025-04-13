@@ -1,7 +1,10 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { useInView } from "react-intersection-observer";
 import { Play, Award, Users, Building } from "lucide-react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
 
 const stats = [
   {
@@ -31,54 +34,142 @@ export const AboutSection = () => {
   const y1 = useTransform(scrollY, [0, 1000], [0, 200]);
   const y2 = useTransform(scrollY, [0, 1000], [0, -200]);
 
-  const [ref, inView] = useInView({
-    triggerOnce: false,
-    threshold: 0.5,
-  });
-
   // Gestionar la reproducción automática cuando el video entra en el viewport
   useEffect(() => {
     if (videoRef.current) {
-      if (inView) {
-        videoRef.current.play().catch((error) => {
-          console.error("Error al reproducir el video:", error);
-        });
-        setIsVideoPlaying(true);
-      } else {
-        videoRef.current.pause();
-        setIsVideoPlaying(false);
-      }
+      const observer = new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting) {
+            videoRef.current?.play().catch((error) => {
+              console.error("Error al reproducir el video:", error);
+            });
+            setIsVideoPlaying(true);
+          } else {
+            videoRef.current?.pause();
+            setIsVideoPlaying(false);
+          }
+        },
+        { threshold: 0.5 }
+      );
+
+      observer.observe(videoRef.current);
+      return () => {
+        if (videoRef.current) observer.unobserve(videoRef.current);
+      };
     }
-  }, [inView]);
+  }, []);
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.2,
-      },
-    },
-  };
+  // Animaciones con GSAP
+  useEffect(() => {
+    // Título
+    gsap.fromTo(
+      ".about-title",
+      { opacity: 0, y: -50 },
+      {
+        opacity: 1,
+        y: 0,
+        duration: 1,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: ".about-title",
+          start: "top 80%",
+          toggleActions: "play none none reverse",
+        },
+      }
+    );
 
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.5 },
-    },
-  };
+    // Párrafos con efecto secuencial
+    gsap.utils
+      .toArray<HTMLElement>(".about-paragraph")
+      .forEach((paragraph, i) => {
+        gsap.fromTo(
+          paragraph,
+          { opacity: 0, y: 30 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+            delay: 0.2 + i * 0.2,
+            ease: "power2.out",
+            scrollTrigger: {
+              trigger: paragraph,
+              start: "top 85%",
+              toggleActions: "play none none reverse",
+            },
+          }
+        );
+      });
+
+    // Video con efecto de zoom
+    gsap.fromTo(
+      ".video-container",
+      { opacity: 0, scale: 0.9 },
+      {
+        opacity: 1,
+        scale: 1,
+        duration: 1,
+        ease: "back.out(1.7)",
+        scrollTrigger: {
+          trigger: ".video-container",
+          start: "top 75%",
+          toggleActions: "play none none reverse",
+        },
+      }
+    );
+
+    // Estadísticas con contador
+    gsap.utils.toArray<HTMLElement>(".stat-value").forEach((stat, i) => {
+      const originalValue = stat.innerText;
+
+      // Reiniciar a cero
+      stat.innerText = "0";
+
+      // Animación de conteo
+      gsap.to(stat, {
+        innerText: originalValue,
+        duration: 2,
+        delay: 0.3 + i * 0.2,
+        ease: "power2.out",
+        snap: { innerText: 1 },
+        scrollTrigger: {
+          trigger: stat,
+          start: "top 85%",
+          toggleActions: "play none none reset",
+        },
+        onUpdate: function () {
+          stat.innerText = this.targets()[0].innerText.includes("+")
+            ? this.targets()[0].innerText
+            : `${this.targets()[0].innerText}+`;
+        },
+      });
+
+      // Animación del contenedor de estadísticas
+      gsap.fromTo(
+        `.stat-container-${i}`,
+        { opacity: 0, y: 50 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.8,
+          delay: 0.4 + i * 0.2,
+          ease: "back.out(1.7)",
+          scrollTrigger: {
+            trigger: `.stat-container-${i}`,
+            start: "top 85%",
+            toggleActions: "play none none reverse",
+          },
+        }
+      );
+    });
+
+    return () => {
+      ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
+    };
+  }, []);
 
   return (
     <section id="about" className="relative py-20 overflow-hidden bg-secondary">
-      <motion.div
-        ref={ref}
-        initial="hidden"
-        animate={inView ? "visible" : "hidden"}
-        variants={containerVariants}
-        className="max-w-7xl mx-auto px-4"
-      >
+      <div className="max-w-7xl mx-auto px-4">
         {/* Parallax Background Elements */}
         <motion.div
           style={{ y: y1 }}
@@ -91,18 +182,18 @@ export const AboutSection = () => {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center relative">
           {/* Content Section */}
-          <motion.div variants={itemVariants} className="z-10">
-            <h2 className="text-4xl md:text-5xl font-playfair text-white mb-6">
+          <div className="z-10">
+            <h2 className="about-title text-4xl md:text-5xl font-playfair text-white mb-6">
               Where Vision Meets Innovation
             </h2>
-            <p className="text-gray-300 mb-6 leading-relaxed font-inter">
+            <p className="about-paragraph text-gray-300 mb-6 leading-relaxed font-inter">
               Since 2008, our studio has been at the forefront of architectural
               innovation, combining cutting-edge technology with timeless design
               principles. We believe in creating spaces that not only meet
               functional requirements but also inspire and elevate the human
               experience.
             </p>
-            <p className="text-gray-300 mb-8 leading-relaxed font-inter">
+            <p className="about-paragraph text-gray-300 mb-8 leading-relaxed font-inter">
               Our approach integrates sustainable practices with innovative
               design solutions, ensuring each project contributes positively to
               its environment and community. We pride ourselves on our ability
@@ -118,11 +209,11 @@ export const AboutSection = () => {
             >
               View Our Projects
             </motion.button>
-          </motion.div>
+          </div>
 
           {/* Video Section */}
-          <motion.div variants={itemVariants} className="relative aspect-video">
-            <div ref={ref} className="relative rounded-lg overflow-hidden">
+          <div className="video-container relative aspect-video">
+            <div className="relative rounded-lg overflow-hidden shadow-xl">
               <video
                 ref={videoRef}
                 className="w-full h-full object-cover"
@@ -161,30 +252,27 @@ export const AboutSection = () => {
                 </div>
               )}
             </div>
-          </motion.div>
+          </div>
         </div>
 
         {/* Stats Section */}
-        <motion.div
-          variants={itemVariants}
-          className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-20"
-        >
-          {stats.map((stat) => (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-20">
+          {stats.map((stat, index) => (
             <div
               key={stat.id}
-              className="bg-primary/50 rounded-lg p-6 text-center backdrop-blur-sm"
+              className={`stat-container-${index} bg-primary/50 rounded-lg p-6 text-center backdrop-blur-sm transform transition-transform hover:scale-105 duration-300`}
             >
               <div className="flex justify-center mb-4 text-accent">
                 {stat.icon}
               </div>
-              <div className="text-3xl font-playfair text-white mb-2">
+              <div className="stat-value text-3xl font-playfair text-white mb-2">
                 {stat.value}
               </div>
               <div className="text-gray-400 font-inter">{stat.label}</div>
             </div>
           ))}
-        </motion.div>
-      </motion.div>
+        </div>
+      </div>
     </section>
   );
 };

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import {
@@ -9,6 +9,10 @@ import {
   PenTool,
   Layout,
 } from "lucide-react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
 
 interface Service {
   id: number;
@@ -113,62 +117,98 @@ const services: Service[] = [
 ];
 
 export const ServicesSection = () => {
-  const [ref, inView] = useInView({
-    triggerOnce: true,
+  const [ref] = useInView({
+    triggerOnce: false,
     threshold: 0.1,
   });
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.2,
-      },
-    },
-  };
+  useEffect(() => {
+    // Animación para el título y subtítulo cuando entran en el viewport
+    gsap.fromTo(
+      ".services-title",
+      { opacity: 0, y: -50 },
+      {
+        opacity: 1,
+        y: 0,
+        duration: 1,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: ".services-title",
+          start: "top 80%",
+          toggleActions: "play none none reverse",
+        },
+      }
+    );
 
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.5,
-      },
-    },
-  };
+    gsap.fromTo(
+      ".services-subtitle",
+      { opacity: 0, y: -30 },
+      {
+        opacity: 1,
+        y: 0,
+        duration: 1,
+        delay: 0.3,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: ".services-subtitle",
+          start: "top 80%",
+          toggleActions: "play none none reverse",
+        },
+      }
+    );
+
+    // Animación para las cards cuando entran en el viewport
+    const serviceCards = gsap.utils.toArray<HTMLElement>(".service-card");
+    serviceCards.forEach((card, i) => {
+      gsap.fromTo(
+        card,
+        {
+          opacity: 0,
+          y: 100,
+          scale: 0.9,
+        },
+        {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          duration: 0.8,
+          delay: i * 0.15, // Efecto escalonado
+          ease: "power2.out",
+          scrollTrigger: {
+            trigger: card,
+            start: "top 85%",
+            toggleActions: "play none none reverse",
+          },
+        }
+      );
+    });
+
+    return () => {
+      ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
+    };
+  }, []);
 
   return (
     <section id="services" className="py-20 px-4 bg-primary">
-      <motion.div
-        ref={ref}
-        initial="hidden"
-        animate={inView ? "visible" : "hidden"}
-        variants={containerVariants}
-        className="max-w-7xl mx-auto"
-      >
+      <div ref={ref} className="max-w-7xl mx-auto">
         <div className="text-center mb-16">
-          <motion.h2
-            className="text-4xl md:text-5xl font-playfair text-white mb-4"
-            variants={itemVariants}
-          >
+          <h2 className="services-title text-4xl md:text-5xl font-playfair text-white mb-4">
             Our Services
-          </motion.h2>
-          <motion.p
-            className="text-gray-300 max-w-2xl mx-auto font-inter"
-            variants={itemVariants}
-          >
+          </h2>
+          <p className="services-subtitle text-gray-300 max-w-2xl mx-auto font-inter">
             Comprehensive architectural solutions tailored to your vision
-          </motion.p>
+          </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {services.map((service) => (
             <motion.div
               key={service.id}
-              variants={itemVariants}
-              className="relative h-[400px] group overflow-hidden rounded-lg"
+              className="service-card relative h-[400px] group overflow-hidden rounded-lg"
+              whileHover={{
+                scale: 1.03,
+                transition: { duration: 0.3 },
+              }}
             >
               {/* Imagen de fondo y overlay inicial */}
               <div
@@ -189,7 +229,12 @@ export const ServicesSection = () => {
               </div>
 
               {/* Contenido detallado (visible en hover) */}
-              <motion.div className="absolute inset-0 p-6 flex flex-col bg-secondary/95 translate-y-full transition-transform duration-500 group-hover:translate-y-0">
+              <motion.div
+                className="absolute inset-0 p-6 flex flex-col bg-secondary/95 translate-y-full transition-transform duration-500 group-hover:translate-y-0"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.2 }}
+              >
                 <div className="flex items-center mb-4">
                   <div className="p-3 rounded-lg bg-accent/10 text-accent">
                     {service.icon}
@@ -235,7 +280,7 @@ export const ServicesSection = () => {
             </motion.div>
           ))}
         </div>
-      </motion.div>
+      </div>
     </section>
   );
 };

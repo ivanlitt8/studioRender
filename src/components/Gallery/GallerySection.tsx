@@ -3,23 +3,26 @@ import { motion, AnimatePresence } from "framer-motion";
 import Masonry from "react-masonry-css";
 import { X } from "lucide-react";
 import { useInView } from "react-intersection-observer";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
 
 type MainCategory = "all" | "exterior" | "interior";
-type SubCategory =
-  | "modern"
-  | "classic"
-  | "minimalist"
-  | "contemporary"
-  | "industrial"
-  | "rustic";
+type SubCategory = string | null;
 
 interface Project {
   id: number;
   title: string;
   mainCategory: MainCategory;
-  subCategory?: SubCategory;
+  subCategory: string;
   imageUrl: string;
   description: string;
+}
+
+interface CategoryItem {
+  id: string;
+  label: string;
 }
 
 const projects: Project[] = [
@@ -262,10 +265,10 @@ export const GallerySection = () => {
   const [selectedMainCategory, setSelectedMainCategory] =
     useState<MainCategory>("all");
   const [selectedSubCategory, setSelectedSubCategory] =
-    useState<SubCategory | null>(null);
+    useState<SubCategory>(null);
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
-  const [ref, inView] = useInView({
-    triggerOnce: true,
+  const [ref] = useInView({
+    triggerOnce: false,
     threshold: 0.1,
   });
 
@@ -282,24 +285,95 @@ export const GallerySection = () => {
     return true;
   });
 
+  useEffect(() => {
+    // Animación para el título y subtítulo cuando entran en el viewport
+    gsap.fromTo(
+      ".gallery-title",
+      { opacity: 0, y: -50 },
+      {
+        opacity: 1,
+        y: 0,
+        duration: 1,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: ".gallery-title",
+          start: "top 80%",
+          toggleActions: "play none none reverse",
+        },
+      }
+    );
+
+    gsap.fromTo(
+      ".gallery-subtitle",
+      { opacity: 0, y: -30 },
+      {
+        opacity: 1,
+        y: 0,
+        duration: 1,
+        delay: 0.3,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: ".gallery-subtitle",
+          start: "top 80%",
+          toggleActions: "play none none reverse",
+        },
+      }
+    );
+
+    // Animación para la galería
+    gsap.fromTo(
+      ".gallery-grid",
+      { opacity: 0 },
+      {
+        opacity: 1,
+        duration: 1.2,
+        delay: 0.5,
+        scrollTrigger: {
+          trigger: ".gallery-grid",
+          start: "top 90%",
+          toggleActions: "play none none reverse",
+        },
+      }
+    );
+
+    // Animación para las categorías
+    gsap.fromTo(
+      ".gallery-categories button",
+      {
+        opacity: 0,
+        y: 20,
+      },
+      {
+        opacity: 1,
+        y: 0,
+        duration: 0.5,
+        stagger: 0.1,
+        ease: "back.out(1.7)",
+        scrollTrigger: {
+          trigger: ".gallery-categories",
+          start: "top 85%",
+          toggleActions: "play none none reverse",
+        },
+      }
+    );
+
+    return () => {
+      ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
+    };
+  }, []);
+
   return (
     <section id="gallery" className="py-20 px-4 bg-secondary min-h-screen">
-      <motion.div
-        ref={ref}
-        initial={{ opacity: 0, y: 20 }}
-        animate={inView ? { opacity: 1, y: 0 } : {}}
-        transition={{ duration: 0.6 }}
-        className="max-w-7xl mx-auto"
-      >
-        <h2 className="text-4xl md:text-5xl font-playfair text-white text-center mb-4">
+      <div ref={ref} className="max-w-7xl mx-auto">
+        <h2 className="gallery-title text-4xl md:text-5xl font-playfair text-white text-center mb-4">
           Our Portfolio
         </h2>
-        <p className="text-gray-300 text-center mb-12 font-inter">
+        <p className="gallery-subtitle text-gray-300 text-center mb-12 font-inter">
           Explore our diverse collection of architectural projects
         </p>
 
         {/* Main Categories */}
-        <div className="flex flex-wrap justify-center gap-4 mb-6">
+        <div className="gallery-categories flex flex-wrap justify-center gap-4 mb-6">
           {mainCategories.map((category) => (
             <motion.button
               key={category.id}
@@ -321,146 +395,150 @@ export const GallerySection = () => {
         </div>
 
         {/* Sub Categories */}
-        <AnimatePresence>
+        <AnimatePresence mode="wait">
           {selectedMainCategory !== "all" && (
             <motion.div
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
               transition={{ duration: 0.3 }}
-              className="flex flex-wrap justify-center gap-3 mb-12 overflow-hidden"
+              className="overflow-hidden"
             >
-              <motion.button
-                key="all-sub"
-                onClick={() => setSelectedSubCategory(null)}
-                className={`px-6 py-2 rounded-full font-inter text-xs transition-all duration-300
-                  ${
-                    selectedSubCategory === null
-                      ? "bg-accent/70 text-white"
-                      : "bg-gray-700 text-gray-300 hover:bg-gray-600"
-                  }`}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                All{" "}
-                {selectedMainCategory === "exterior"
-                  ? "Exteriors"
-                  : "Interiors"}
-              </motion.button>
-
-              {subCategories[selectedMainCategory].map((subCategory) => (
-                <motion.button
-                  key={subCategory.id}
-                  onClick={() =>
-                    setSelectedSubCategory(subCategory.id as SubCategory)
-                  }
-                  className={`px-6 py-2 rounded-full font-inter text-xs transition-all duration-300
-                    ${
-                      selectedSubCategory === subCategory.id
-                        ? "bg-accent/70 text-white"
-                        : "bg-gray-700 text-gray-300 hover:bg-gray-600"
-                    }`}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  {subCategory.label}
-                </motion.button>
-              ))}
+              <div className="flex flex-wrap justify-center gap-3 mb-10">
+                {subCategories[selectedMainCategory].map((category) => (
+                  <motion.button
+                    key={category.id}
+                    onClick={() =>
+                      setSelectedSubCategory(category.id as SubCategory)
+                    }
+                    className={`px-6 py-2 rounded-full font-inter text-xs transition-all duration-300
+                      ${
+                        selectedSubCategory === category.id
+                          ? "bg-accent/20 text-accent border border-accent"
+                          : "bg-gray-800/50 text-gray-400 border border-gray-700 hover:text-gray-200"
+                      }`}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    {category.label}
+                  </motion.button>
+                ))}
+              </div>
             </motion.div>
           )}
         </AnimatePresence>
 
         {/* Gallery Grid */}
-        <Masonry
-          breakpointCols={breakpointColumns}
-          className="flex -ml-4 w-auto"
-          columnClassName="pl-4 bg-clip-padding"
+        <motion.div
+          className="gallery-grid"
+          layout
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5 }}
         >
-          {filteredProjects.map((project) => (
-            <motion.div
-              key={project.id}
-              layout
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.5 }}
-              className="mb-4"
-            >
+          <Masonry
+            breakpointCols={breakpointColumns}
+            className="flex w-auto -ml-4"
+            columnClassName="pl-4 bg-clip-padding"
+          >
+            {filteredProjects.map((project) => (
               <motion.div
-                whileHover={{ scale: 1.02 }}
-                className="relative overflow-hidden rounded-lg cursor-pointer"
+                key={project.id}
+                layout
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.8 }}
+                transition={{ duration: 0.5 }}
+                className="mb-4 cursor-pointer group relative overflow-hidden rounded-lg"
                 onClick={() => setSelectedProject(project)}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
               >
-                <img
-                  src={project.imageUrl}
-                  alt={project.title}
-                  className="w-full h-auto object-cover"
-                  loading="lazy"
-                />
-                <div className="absolute inset-0 bg-black bg-opacity-0 hover:bg-opacity-40 transition-all duration-300 flex items-center justify-center">
-                  <div className="opacity-0 hover:opacity-100 text-white text-center p-4 transform translate-y-4 hover:translate-y-0 transition-all duration-300">
-                    <h3 className="text-xl font-playfair mb-2">
+                <div className="relative pb-[100%] overflow-hidden rounded-lg">
+                  <img
+                    src={project.imageUrl}
+                    alt={project.title}
+                    className="absolute inset-0 w-full h-full object-cover transform transition-transform duration-500 group-hover:scale-110"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4">
+                    <h3 className="text-white font-playfair text-lg mb-1">
                       {project.title}
                     </h3>
-                    <p className="text-sm font-inter">{project.description}</p>
-                    {project.subCategory && (
-                      <span className="inline-block mt-2 px-3 py-1 bg-accent/80 rounded-full text-xs">
-                        {project.subCategory}
-                      </span>
-                    )}
+                    <p className="text-gray-300 text-sm font-inter">
+                      {project.description}
+                    </p>
                   </div>
                 </div>
               </motion.div>
-            </motion.div>
-          ))}
-        </Masonry>
+            ))}
+          </Masonry>
+        </motion.div>
 
-        {/* Lightbox */}
+        {/* Modal */}
         <AnimatePresence>
           {selectedProject && (
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center p-4"
+              className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4"
               onClick={() => setSelectedProject(null)}
             >
               <motion.div
-                initial={{ scale: 0.9 }}
-                animate={{ scale: 1 }}
-                exit={{ scale: 0.9 }}
-                className="relative max-w-4xl w-full"
+                initial={{ scale: 0.8, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.8, opacity: 0 }}
+                transition={{ type: "spring", damping: 20 }}
+                className="relative max-w-5xl w-full bg-secondary rounded-lg overflow-hidden"
                 onClick={(e) => e.stopPropagation()}
               >
                 <button
-                  className="absolute top-4 right-4 text-white hover:text-accent transition-colors"
+                  className="absolute top-4 right-4 bg-black/50 rounded-full p-2 text-white z-10 hover:bg-black transition-colors duration-300"
                   onClick={() => setSelectedProject(null)}
                 >
-                  <X size={24} />
+                  <X className="w-6 h-6" />
                 </button>
-                <img
-                  src={selectedProject.imageUrl}
-                  alt={selectedProject.title}
-                  className="w-full h-auto rounded-lg"
-                />
-                <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-75 p-4 rounded-b-lg">
-                  <h3 className="text-xl font-playfair text-white mb-2">
+                <div className="relative">
+                  <img
+                    src={selectedProject.imageUrl}
+                    alt={selectedProject.title}
+                    className="w-full h-auto"
+                  />
+                </div>
+                <div className="p-6">
+                  <h3 className="text-white font-playfair text-2xl mb-2">
                     {selectedProject.title}
                   </h3>
-                  <p className="text-gray-300 font-inter">
+                  <p className="text-gray-300 mb-4 font-inter">
                     {selectedProject.description}
                   </p>
-                  {selectedProject.subCategory && (
-                    <span className="inline-block mt-3 px-3 py-1 bg-accent/80 rounded-full text-xs">
-                      {selectedProject.subCategory}
+                  <div className="flex gap-2">
+                    <span className="bg-accent/20 text-accent px-3 py-1 rounded-full text-xs">
+                      {
+                        mainCategories.find(
+                          (c: CategoryItem) =>
+                            c.id === selectedProject.mainCategory
+                        )?.label
+                      }
                     </span>
-                  )}
+                    {selectedProject.subCategory &&
+                      selectedProject.mainCategory !== "all" && (
+                        <span className="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-xs">
+                          {
+                            subCategories[selectedProject.mainCategory]?.find(
+                              (c: CategoryItem) =>
+                                c.id === selectedProject.subCategory
+                            )?.label
+                          }
+                        </span>
+                      )}
+                  </div>
                 </div>
               </motion.div>
             </motion.div>
           )}
         </AnimatePresence>
-      </motion.div>
+      </div>
     </section>
   );
 };
