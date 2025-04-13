@@ -1,7 +1,20 @@
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown } from "lucide-react";
+import { useState, useEffect } from "react";
 
 export const Hero = () => {
+  const phrases = ["Shaping Dreams", "Building Visions", "Creating Impact"];
+
+  const [currentPhraseIndex, setCurrentPhraseIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentPhraseIndex((prev) => (prev + 1) % phrases.length);
+    }, 2000); // Cambia cada 3 segundos
+
+    return () => clearInterval(interval);
+  }, []);
+
   const scrollToGallery = () => {
     const gallerySection = document.querySelector("#gallery");
     if (gallerySection) {
@@ -24,12 +37,23 @@ export const Hero = () => {
 
       <div className="relative h-full flex flex-col items-center justify-center text-white px-4">
         <motion.h1
-          className="font-playfair text-5xl md:text-7xl text-center mb-6"
+          className="font-playfair text-5xl md:text-7xl text-center mb-6 flex items-center justify-center flex-wrap"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          Crafting Spaces, Shaping Dreams
+          <span>Crafting Spaces, </span>
+          <AnimatePresence mode="wait">
+            <motion.span
+              key={currentPhraseIndex}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.5 }}
+            >
+              {phrases[currentPhraseIndex]}
+            </motion.span>
+          </AnimatePresence>
         </motion.h1>
 
         <motion.p

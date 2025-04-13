@@ -4,7 +4,7 @@ import { useInView } from "react-intersection-observer";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Phone, Mail, MapPin, Check, X, Upload } from "lucide-react";
+import { Phone, Mail, Check, X, Upload } from "lucide-react";
 import { db } from "../../firebase-config";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { supabase } from "../../lib/supabase.js";
