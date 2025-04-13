@@ -6,8 +6,7 @@ import { GallerySection } from "./components/Gallery/GallerySection";
 import { TeamSection } from "./components/Team/TeamSection";
 import { ContactSection } from "./components/Contact/ContactSection";
 import { Footer } from "./components/Footer/Footer";
-// Eliminamos temporalmente la importación para facilitar el despliegue
-// import { ProgressIndicator } from "./components/ProgressIndicator";
+import { ScrollProgress } from "./components/UI/ScrollProgress";
 import "@fontsource/playfair-display";
 import "@fontsource/inter";
 
@@ -15,8 +14,7 @@ function App() {
   return (
     <div className="min-h-screen bg-primary">
       <Navbar />
-      {/* Comentamos el componente que causa problemas */}
-      {/* <ProgressIndicator /> */}
+      <ScrollProgress />
       <Hero />
       <AboutSection />
       <ServicesSection />
