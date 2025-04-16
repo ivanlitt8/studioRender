@@ -319,7 +319,7 @@ export const ContactSection = () => {
                 </div>
                 <div className="flex items-center text-gray-300">
                   <Mail className="w-5 h-5 text-accent mr-4" />
-                  <span>contact@r3alim.com</span>
+                  <span>info@r3alim.com</span>
                 </div>
               </div>
 
