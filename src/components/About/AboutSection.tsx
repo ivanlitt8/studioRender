@@ -217,7 +217,7 @@ export const AboutSection = () => {
               <video
                 ref={videoRef}
                 className="w-full h-full object-cover"
-                poster="https://images.unsplash.com/photo-1545558014-8692077e9b5c?auto=format&fit=crop&q=80"
+                //poster="https://images.unsplash.com/photo-1545558014-8692077e9b5c?auto=format&fit=crop&q=80"
                 loop
                 muted
                 playsInline
