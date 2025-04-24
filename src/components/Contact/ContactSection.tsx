@@ -281,7 +281,7 @@ export const ContactSection = () => {
       const emailResult = await sendEmail({
         fullName: data.fullName,
         email: data.email,
-        projectType: "other", // Valor por defecto
+        projectType: "Quick Contact",
         brief: data.brief,
         fileUrls: [],
       });
