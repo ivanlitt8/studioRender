@@ -19,11 +19,17 @@ const ACCEPTED_FILE_TYPES = [
   "application/dxf",
 ];
 
-const contactSchema = z.object({
+// Esquema común para ambos formularios
+const baseSchema = {
   fullName: z.string().min(2, "Full name is required"),
   email: z.string().email("Invalid email address"),
-  projectType: z.enum(["exterior", "interior", "urban", "landscape", "other"]),
   brief: z.string().optional(),
+};
+
+// Esquema para el formulario completo
+const fullContactSchema = z.object({
+  ...baseSchema,
+  projectType: z.enum(["exterior", "interior", "urban", "landscape", "other"]),
   files: z
     .custom<FileList>()
     .refine((files) => files?.length <= 5, "Maximum of 5 files allowed")
@@ -40,7 +46,13 @@ const contactSchema = z.object({
     .optional(),
 });
 
-type ContactFormData = z.infer<typeof contactSchema>;
+// Esquema para el formulario simplificado
+const simpleContactSchema = z.object({
+  ...baseSchema,
+});
+
+type FullContactFormData = z.infer<typeof fullContactSchema>;
+type SimpleContactFormData = z.infer<typeof simpleContactSchema>;
 
 const projectTypes = [
   { value: "exterior", label: "Exterior Design" },
@@ -51,6 +63,7 @@ const projectTypes = [
 ];
 
 export const ContactSection = () => {
+  const [activeTab, setActiveTab] = useState<"full" | "simple">("full");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<"success" | "error" | null>(
     null
@@ -62,13 +75,24 @@ export const ContactSection = () => {
   });
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
 
+  // Formulario completo
   const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    reset,
-  } = useForm<ContactFormData>({
-    resolver: zodResolver(contactSchema),
+    register: registerFull,
+    handleSubmit: handleSubmitFull,
+    formState: { errors: errorsFull },
+    reset: resetFull,
+  } = useForm<FullContactFormData>({
+    resolver: zodResolver(fullContactSchema),
+  });
+
+  // Formulario simplificado
+  const {
+    register: registerSimple,
+    handleSubmit: handleSubmitSimple,
+    formState: { errors: errorsSimple },
+    reset: resetSimple,
+  } = useForm<SimpleContactFormData>({
+    resolver: zodResolver(simpleContactSchema),
   });
 
   // Verificar configuración de Supabase al montar
@@ -161,7 +185,7 @@ export const ContactSection = () => {
     }
   };
 
-  const onSubmit = async (data: ContactFormData) => {
+  const onSubmitFull = async (data: FullContactFormData) => {
     setIsSubmitting(true);
     try {
       // Subir archivos si existen
@@ -221,13 +245,64 @@ export const ContactSection = () => {
 
       setSubmitStatus("success");
       setSelectedFiles([]);
-      reset();
+      resetFull();
     } catch (error) {
       console.error("Error al enviar el formulario:", error);
       setSubmitStatus("error");
     } finally {
       setIsSubmitting(false);
       setUploadProgress(0);
+    }
+  };
+
+  const onSubmitSimple = async (data: SimpleContactFormData) => {
+    setIsSubmitting(true);
+    try {
+      // Crear objeto con los datos del formulario simplificado
+      const contactData = {
+        fullName: data.fullName,
+        email: data.email,
+        projectType: "Quick Contact",
+        brief: data.brief || "",
+        fileUrls: [],
+        createdAt: serverTimestamp(),
+      };
+
+      console.log(
+        "Datos a guardar en Firestore (formulario simple):",
+        contactData
+      );
+
+      // Guardar en Firestore
+      const docRef = await addDoc(collection(db, "contacts"), contactData);
+      console.log("Documento creado con ID:", docRef.id);
+
+      // Enviar correo electrónico usando nuestro servicio
+      const emailResult = await sendEmail({
+        fullName: data.fullName,
+        email: data.email,
+        projectType: "other", // Valor por defecto
+        brief: data.brief,
+        fileUrls: [],
+      });
+
+      if (!emailResult.success) {
+        console.warn(
+          "El correo electrónico no pudo ser enviado:",
+          emailResult.message
+        );
+        // Continuamos el flujo aunque falle el envío de correo
+      } else {
+        console.log("Correo electrónico enviado con éxito");
+      }
+
+      setSubmitStatus("success");
+      resetSimple();
+    } catch (error) {
+      console.error("Error al enviar el formulario simplificado:", error);
+      setSubmitStatus("error");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -336,228 +411,305 @@ export const ContactSection = () => {
             </div>
           </div>
 
-          {/* Contact Form */}
+          {/* Contact Form with Tabs */}
           <div className="lg:col-span-2">
-            <form
-              onSubmit={handleSubmit(onSubmit)}
-              className="bg-secondary rounded-lg p-8"
-            >
+            <div className="bg-secondary rounded-lg p-8">
               <h3 className="text-2xl font-playfair text-white mb-6">
                 Request Quote
               </h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {/* Project Type */}
-                <div className="col-span-2">
-                  <label
-                    htmlFor="projectType"
-                    className="block text-white font-inter mb-2"
-                  >
-                    Project Type *
-                  </label>
-                  <select
-                    id="projectType"
-                    {...register("projectType")}
-                    className="w-full bg-primary/50 border border-gray-600 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-accent"
-                  >
-                    {projectTypes.map((type) => (
-                      <option key={type.value} value={type.value}>
-                        {type.label}
-                      </option>
-                    ))}
-                  </select>
-                </div>
 
-                {/* Full Name */}
-                <div className="col-span-2 md:col-span-1">
-                  <label
-                    htmlFor="fullName"
-                    className="block text-white font-inter mb-2"
-                  >
-                    Full Name *
-                  </label>
-                  <input
-                    type="text"
-                    id="fullName"
-                    {...register("fullName")}
-                    className={`w-full bg-primary/50 border ${
-                      errors.fullName ? "border-red-500" : "border-gray-600"
-                    } rounded-lg px-4 py-3 text-white focus:outline-none focus:border-accent`}
-                  />
-                  {errors.fullName && (
-                    <p className="mt-1 text-red-500 text-sm">
-                      {errors.fullName.message}
-                    </p>
-                  )}
-                </div>
+              {/* Tabs */}
+              <div className="flex mb-6 border-b border-gray-600">
+                <button
+                  onClick={() => setActiveTab("full")}
+                  className={`px-4 py-2 font-inter ${
+                    activeTab === "full"
+                      ? "text-accent border-b-2 border-accent"
+                      : "text-gray-300 hover:text-white"
+                  }`}
+                >
+                  Full Project Request
+                </button>
+                <button
+                  onClick={() => setActiveTab("simple")}
+                  className={`px-4 py-2 font-inter ${
+                    activeTab === "simple"
+                      ? "text-accent border-b-2 border-accent"
+                      : "text-gray-300 hover:text-white"
+                  }`}
+                >
+                  Quick Contact
+                </button>
+              </div>
 
-                {/* Email */}
-                <div className="col-span-2 md:col-span-1">
-                  <label
-                    htmlFor="email"
-                    className="block text-white font-inter mb-2"
-                  >
-                    Email Address *
-                  </label>
-                  <input
-                    type="email"
-                    id="email"
-                    {...register("email")}
-                    className={`w-full bg-primary/50 border ${
-                      errors.email ? "border-red-500" : "border-gray-600"
-                    } rounded-lg px-4 py-3 text-white focus:outline-none focus:border-accent`}
-                  />
-                  {errors.email && (
-                    <p className="mt-1 text-red-500 text-sm">
-                      {errors.email.message}
-                    </p>
-                  )}
-                </div>
+              {/* Full Form */}
+              {activeTab === "full" && (
+                <form
+                  onSubmit={handleSubmitFull(onSubmitFull)}
+                  className="grid grid-cols-1 md:grid-cols-2 gap-6"
+                >
+                  {/* Project Type */}
+                  <div className="col-span-2">
+                    <label
+                      htmlFor="projectType"
+                      className="block text-white font-inter mb-2"
+                    >
+                      Project Type *
+                    </label>
+                    <select
+                      id="projectType"
+                      {...registerFull("projectType")}
+                      className="w-full bg-primary/50 border border-gray-600 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-accent"
+                    >
+                      {projectTypes.map((type) => (
+                        <option key={type.value} value={type.value}>
+                          {type.label}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
 
-                {/* Subject */}
-                {/* <div className="col-span-2">
-                  <label
-                    htmlFor="subject"
-                    className="block text-white font-inter mb-2"
-                  >
-                    Subject *
-                  </label>
-                  <input
-                    type="text"
-                    id="subject"
-                    {...register("subject")}
-                    className={`w-full bg-primary/50 border ${
-                      errors.subject ? "border-red-500" : "border-gray-600"
-                    } rounded-lg px-4 py-3 text-white focus:outline-none focus:border-accent`}
-                  />
-                  {errors.subject && (
-                    <p className="mt-1 text-red-500 text-sm">
-                      {errors.subject.message}
-                    </p>
-                  )}
-                </div> */}
-
-                {/* Message */}
-                {/* <div className="col-span-2">
-                  <label
-                    htmlFor="message"
-                    className="block text-white font-inter mb-2"
-                  >
-                    Message *
-                  </label>
-                  <textarea
-                    id="message"
-                    {...register("message")}
-                    rows={4}
-                    className={`w-full bg-primary/50 border ${
-                      errors.message ? "border-red-500" : "border-gray-600"
-                    } rounded-lg px-4 py-3 text-white focus:outline-none focus:border-accent`}
-                  />
-                  {errors.message && (
-                    <p className="mt-1 text-red-500 text-sm">
-                      {errors.message.message}
-                    </p>
-                  )}
-                </div> */}
-
-                {/* Project Brief */}
-                <div className="col-span-2">
-                  <label
-                    htmlFor="brief"
-                    className="block text-white font-inter mb-2"
-                  >
-                    Project Brief
-                  </label>
-                  <textarea
-                    id="brief"
-                    {...register("brief")}
-                    rows={6}
-                    className="w-full bg-primary/50 border border-gray-600 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-accent"
-                    placeholder="Please describe your project in detail..."
-                  />
-                </div>
-
-                {/* File Upload */}
-                <div className="col-span-2">
-                  <label
-                    htmlFor="files"
-                    className="block text-white font-inter mb-2"
-                  >
-                    Upload Files (PDF, JPG, PNG, DWG, DXF - Max 10MB each)
-                  </label>
-                  <div
-                    onClick={onFileInputClick}
-                    onDragOver={onDragOver}
-                    onDrop={onDrop}
-                    className={`w-full bg-primary/50 border ${
-                      errors.files ? "border-red-500" : "border-gray-600"
-                    } rounded-lg px-4 py-6 text-center cursor-pointer hover:border-accent transition-colors relative`}
-                  >
+                  {/* Full Name */}
+                  <div className="col-span-2 md:col-span-1">
+                    <label
+                      htmlFor="fullName"
+                      className="block text-white font-inter mb-2"
+                    >
+                      Full Name *
+                    </label>
                     <input
-                      type="file"
-                      id="files"
-                      {...register("files")}
-                      multiple
-                      accept=".pdf,.jpg,.jpeg,.png,.dwg,.dxf"
-                      className="hidden"
-                      onChange={(e) => handleFileChange(e)}
+                      type="text"
+                      id="fullName"
+                      {...registerFull("fullName")}
+                      className={`w-full bg-primary/50 border ${
+                        errorsFull.fullName
+                          ? "border-red-500"
+                          : "border-gray-600"
+                      } rounded-lg px-4 py-3 text-white focus:outline-none focus:border-accent`}
                     />
-                    {selectedFiles.length > 0 ? (
-                      <div className="space-y-2">
-                        {selectedFiles.map((file, index) => (
-                          <div
-                            key={index}
-                            className="flex items-center justify-center text-gray-300"
-                          >
-                            <span className="truncate max-w-xs">
-                              {file.name}
-                            </span>
-                            <span className="ml-2 text-sm">
-                              ({(file.size / 1024 / 1024).toFixed(2)} MB)
-                            </span>
-                          </div>
-                        ))}
-                      </div>
-                    ) : (
-                      <>
-                        <Upload className="w-8 h-8 text-accent mx-auto mb-2" />
-                        <p className="text-gray-300">
-                          Drag and drop files here or click to browse
-                        </p>
-                      </>
-                    )}
-                    {uploadProgress > 0 && uploadProgress < 100 && (
-                      <div
-                        className="absolute bottom-0 left-0 h-1 bg-accent"
-                        style={{ width: `${uploadProgress}%` }}
-                      />
+                    {errorsFull.fullName && (
+                      <p className="mt-1 text-red-500 text-sm">
+                        {errorsFull.fullName.message}
+                      </p>
                     )}
                   </div>
-                  {errors.files && (
-                    <p className="mt-1 text-red-500 text-sm">
-                      {errors.files.message}
-                    </p>
-                  )}
-                </div>
 
-                {/* Submit Button */}
-                <div className="col-span-2">
-                  <motion.button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className={`w-full bg-accent text-white py-4 rounded-lg font-inter 
-                      ${
-                        isSubmitting
-                          ? "opacity-75 cursor-not-allowed"
-                          : "hover:bg-accent/90"
-                      }`}
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                  >
-                    {isSubmitting ? "Sending..." : "Send Message"}
-                  </motion.button>
-                </div>
-              </div>
-            </form>
+                  {/* Email */}
+                  <div className="col-span-2 md:col-span-1">
+                    <label
+                      htmlFor="email"
+                      className="block text-white font-inter mb-2"
+                    >
+                      Email Address *
+                    </label>
+                    <input
+                      type="email"
+                      id="email"
+                      {...registerFull("email")}
+                      className={`w-full bg-primary/50 border ${
+                        errorsFull.email ? "border-red-500" : "border-gray-600"
+                      } rounded-lg px-4 py-3 text-white focus:outline-none focus:border-accent`}
+                    />
+                    {errorsFull.email && (
+                      <p className="mt-1 text-red-500 text-sm">
+                        {errorsFull.email.message}
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Project Brief */}
+                  <div className="col-span-2">
+                    <label
+                      htmlFor="brief"
+                      className="block text-white font-inter mb-2"
+                    >
+                      Project Brief
+                    </label>
+                    <textarea
+                      id="brief"
+                      {...registerFull("brief")}
+                      rows={6}
+                      className="w-full bg-primary/50 border border-gray-600 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-accent"
+                      placeholder="Please describe your project in detail..."
+                    />
+                  </div>
+
+                  {/* File Upload */}
+                  <div className="col-span-2">
+                    <label
+                      htmlFor="files"
+                      className="block text-white font-inter mb-2"
+                    >
+                      Upload Files (PDF, JPG, PNG, DWG, DXF - Max 10MB each)
+                    </label>
+                    <div
+                      onClick={onFileInputClick}
+                      onDragOver={onDragOver}
+                      onDrop={onDrop}
+                      className={`w-full bg-primary/50 border ${
+                        errorsFull.files ? "border-red-500" : "border-gray-600"
+                      } rounded-lg px-4 py-6 text-center cursor-pointer hover:border-accent transition-colors relative`}
+                    >
+                      <input
+                        type="file"
+                        id="files"
+                        {...registerFull("files")}
+                        multiple
+                        accept=".pdf,.jpg,.jpeg,.png,.dwg,.dxf"
+                        className="hidden"
+                        onChange={(e) => handleFileChange(e)}
+                      />
+                      {selectedFiles.length > 0 ? (
+                        <div className="space-y-2">
+                          {selectedFiles.map((file, index) => (
+                            <div
+                              key={index}
+                              className="flex items-center justify-center text-gray-300"
+                            >
+                              <span className="truncate max-w-xs">
+                                {file.name}
+                              </span>
+                              <span className="ml-2 text-sm">
+                                ({(file.size / 1024 / 1024).toFixed(2)} MB)
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <>
+                          <Upload className="w-8 h-8 text-accent mx-auto mb-2" />
+                          <p className="text-gray-300">
+                            Drag and drop files here or click to browse
+                          </p>
+                        </>
+                      )}
+                      {uploadProgress > 0 && uploadProgress < 100 && (
+                        <div
+                          className="absolute bottom-0 left-0 h-1 bg-accent"
+                          style={{ width: `${uploadProgress}%` }}
+                        />
+                      )}
+                    </div>
+                    {errorsFull.files && (
+                      <p className="mt-1 text-red-500 text-sm">
+                        {errorsFull.files.message}
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Submit Button */}
+                  <div className="col-span-2">
+                    <motion.button
+                      type="submit"
+                      disabled={isSubmitting}
+                      className={`w-full bg-accent text-white py-4 rounded-lg font-inter 
+                        ${
+                          isSubmitting
+                            ? "opacity-75 cursor-not-allowed"
+                            : "hover:bg-accent/90"
+                        }`}
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                    >
+                      {isSubmitting ? "Sending..." : "Send Project Request"}
+                    </motion.button>
+                  </div>
+                </form>
+              )}
+
+              {/* Simple Form */}
+              {activeTab === "simple" && (
+                <form
+                  onSubmit={handleSubmitSimple(onSubmitSimple)}
+                  className="grid grid-cols-1 md:grid-cols-2 gap-6"
+                >
+                  {/* Full Name */}
+                  <div className="col-span-2 md:col-span-1">
+                    <label
+                      htmlFor="fullName-simple"
+                      className="block text-white font-inter mb-2"
+                    >
+                      Full Name *
+                    </label>
+                    <input
+                      type="text"
+                      id="fullName-simple"
+                      {...registerSimple("fullName")}
+                      className={`w-full bg-primary/50 border ${
+                        errorsSimple.fullName
+                          ? "border-red-500"
+                          : "border-gray-600"
+                      } rounded-lg px-4 py-3 text-white focus:outline-none focus:border-accent`}
+                    />
+                    {errorsSimple.fullName && (
+                      <p className="mt-1 text-red-500 text-sm">
+                        {errorsSimple.fullName.message}
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Email */}
+                  <div className="col-span-2 md:col-span-1">
+                    <label
+                      htmlFor="email-simple"
+                      className="block text-white font-inter mb-2"
+                    >
+                      Email Address *
+                    </label>
+                    <input
+                      type="email"
+                      id="email-simple"
+                      {...registerSimple("email")}
+                      className={`w-full bg-primary/50 border ${
+                        errorsSimple.email
+                          ? "border-red-500"
+                          : "border-gray-600"
+                      } rounded-lg px-4 py-3 text-white focus:outline-none focus:border-accent`}
+                    />
+                    {errorsSimple.email && (
+                      <p className="mt-1 text-red-500 text-sm">
+                        {errorsSimple.email.message}
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Message */}
+                  <div className="col-span-2">
+                    <label
+                      htmlFor="brief-simple"
+                      className="block text-white font-inter mb-2"
+                    >
+                      Message
+                    </label>
+                    <textarea
+                      id="brief-simple"
+                      {...registerSimple("brief")}
+                      rows={6}
+                      className="w-full bg-primary/50 border border-gray-600 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-accent"
+                      placeholder="Please type your message here..."
+                    />
+                  </div>
+
+                  {/* Submit Button */}
+                  <div className="col-span-2">
+                    <motion.button
+                      type="submit"
+                      disabled={isSubmitting}
+                      className={`w-full bg-accent text-white py-4 rounded-lg font-inter 
+                        ${
+                          isSubmitting
+                            ? "opacity-75 cursor-not-allowed"
+                            : "hover:bg-accent/90"
+                        }`}
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                    >
+                      {isSubmitting ? "Sending..." : "Send Message"}
+                    </motion.button>
+                  </div>
+                </form>
+              )}
+            </div>
 
             {/* Success/Error Messages */}
             {submitStatus && (
