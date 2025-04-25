@@ -19,8 +19,8 @@ const teamMembers: TeamMember[] = [
   {
     id: 1,
     name: "Juan Insua",
-    role: "CEO, Creative Director & Co-Founder",
-    bio: "With extensive experience in business strategy and creative design, Juan drives our vision with a balanced approach to innovation and operational excellence. As a co-founder, he is responsible for setting the strategic direction and nurturing a culture of creative problem-solving.",
+    role: "CEO & Co-Founder",
+    bio: "Senior professional in accounting and management, currently specialising in digital marketing. As a passionate entrepreneur, he is committed to delivering exceptional client service with a focus on precision and excellence.",
     image:
       "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/images//Portrait_Juan%20(1).jpeg",
     social: {
@@ -32,8 +32,8 @@ const teamMembers: TeamMember[] = [
   {
     id: 2,
     name: "Iñigo Alcarraz",
-    role: "Chief Architectural Visualizer & Co-Founder",
-    bio: "Iñigo is a specialist in architectural visualization and CGI. As a co-founder, he leverages his technical expertise to transform architectural concepts into compelling visual narratives, ensuring that each project is rendered with precision and clarity.",
+    role: "Chief Architectural Visualiser & Co-Founder",
+    bio: "Skilled architect with a technical background in electromechanics. His understanding of materials and construction systems supports a practical approach to projects. With strong spatial awareness, he ensures visualisations align with client visions and desired atmospheres.",
     image:
       "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/images//Portrait_Inigo2.jpg",
     social: {
@@ -43,9 +43,9 @@ const teamMembers: TeamMember[] = [
   },
   {
     id: 3,
-    name: "Bruno",
+    name: "Bruno Faggionato",
     role: "Senior Architect & Rendering Specialist",
-    bio: "Bruno is an accomplished architect with a strong focus on digital rendering and environmental design. His expertise in spatial dynamics and materiality allows him to produce detailed and realistic visualizations that enhance architectural narratives.",
+    bio: "Specialising in graphic representation and 3D modelling, he demonstrates an unwavering commitment to perfection and strives for the highest quality in every visualisation, consistently meeting the highest standards.",
     image:
       "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/images//Portrait_Bruno.jpg",
     social: {
@@ -58,7 +58,7 @@ const teamMembers: TeamMember[] = [
     id: 4,
     name: "Nicolas Pedroza",
     role: "Director of Technical Innovation",
-    bio: "Nicolas brings a robust technical background as an architect, overseeing all technical aspects of our projects. His commitment to precision and the adoption of advanced technologies ensures that every visualization meets the highest standards of quality.",
+    bio: "With years of experience in graphic representation, Nicolas demonstrates a keen architectural eye that allows him to capture the essence of each project. He understands client visions and translates them into precise CAD drawings and visualisations.",
     image:
       "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/images//Portrait_Nico%20(1).jpg",
     social: {

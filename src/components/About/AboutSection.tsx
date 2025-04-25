@@ -184,21 +184,26 @@ export const AboutSection = () => {
           {/* Content Section */}
           <div className="z-10">
             <h2 className="about-title text-4xl md:text-5xl font-playfair text-white mb-6">
-              Where Vision Meets Innovation
+              WHO ARE WE
             </h2>
             <p className="about-paragraph text-gray-300 mb-6 leading-relaxed font-inter">
-              Since 2008, our studio has been at the forefront of architectural
-              innovation, combining cutting-edge technology with timeless design
-              principles. We believe in creating spaces that not only meet
-              functional requirements but also inspire and elevate the human
-              experience.
+              R3ALIM, a studio specialised in architectural visualisation and
+              design storytelling.
+              <br />
+              We help you bring your architectural ideas to life with clarity,
+              atmosphere, and depth—always tailored to your specific project.
+              Our name comes from the fusion of “Real” and “Imagination”,
+              because we believe architecture lives right at that intersection:
+              where imagination becomes real, through design.
             </p>
             <p className="about-paragraph text-gray-300 mb-8 leading-relaxed font-inter">
-              Our approach integrates sustainable practices with innovative
-              design solutions, ensuring each project contributes positively to
-              its environment and community. We pride ourselves on our ability
-              to transform complex challenges into elegant, sustainable
-              architectural solutions.
+              We’re not just rendering images—we’re shaping the way your work is
+              perceived, understood, and remembered. Our approach is rooted in
+              architecture itself: our team is formed by architects and
+              designers who understand the language of space, scale, and
+              intention. This means that every project is treated not only with
+              visual precision, but also with technical and conceptual
+              awareness.
             </p>
 
             <motion.button
