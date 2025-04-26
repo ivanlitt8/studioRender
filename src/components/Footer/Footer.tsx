@@ -13,9 +13,17 @@ import {
 
 const socialLinks = [
   { icon: <Linkedin className="w-5 h-5" />, href: "#", label: "LinkedIn" },
-  { icon: <Instagram className="w-5 h-5" />, href: "#", label: "Instagram" },
+  {
+    icon: <Instagram className="w-5 h-5" />,
+    href: "https://www.instagram.com/realim.studio/",
+    label: "Instagram",
+  },
   { icon: <Twitter className="w-5 h-5" />, href: "#", label: "Twitter" },
-  { icon: <Facebook className="w-5 h-5" />, href: "#", label: "Facebook" },
+  {
+    icon: <Facebook className="w-5 h-5" />,
+    href: "https://www.facebook.com/r3alim",
+    label: "Facebook",
+  },
 ];
 
 const quickLinks = [
@@ -103,7 +111,7 @@ export const Footer = () => {
                 className="flex items-center space-x-3 text-gray-400 hover:text-accent transition-colors duration-300"
               >
                 <Phone className="w-5 h-5" />
-                <span className="font-inter">+1 (555) 123-4567</span>
+                <span className="font-inter">+61 425 432 846</span>
               </a>
               <a
                 href="mailto:contact@studio.com"
@@ -141,7 +149,7 @@ export const Footer = () => {
           className="pt-8 mt-8 border-t border-gray-800 text-center"
         >
           <p className="text-gray-500 font-inter text-sm">
-            © {new Date().getFullYear()} Studio. All rights reserved. Develop by{" "}
+            © {new Date().getFullYear()} R3alim. All rights reserved. Develop by{" "}
             <a
               href="https://portfolio-ivan-litt.netlify.app/"
               target="_blank"

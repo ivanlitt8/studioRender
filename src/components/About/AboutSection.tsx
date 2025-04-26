@@ -192,12 +192,12 @@ export const AboutSection = () => {
               <br />
               We help you bring your architectural ideas to life with clarity,
               atmosphere, and depth—always tailored to your specific project.
-              Our name comes from the fusion of “Real” and “Imagination”,
+              Our name comes from the fusion of "Real" and "Imagination",
               because we believe architecture lives right at that intersection:
               where imagination becomes real, through design.
             </p>
             <p className="about-paragraph text-gray-300 mb-8 leading-relaxed font-inter">
-              We’re not just rendering images—we’re shaping the way your work is
+              We're not just rendering images—we're shaping the way your work is
               perceived, understood, and remembered. Our approach is rooted in
               architecture itself: our team is formed by architects and
               designers who understand the language of space, scale, and
@@ -261,7 +261,7 @@ export const AboutSection = () => {
         </div>
 
         {/* Stats Section */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-20">
+        <div className="hidden md:grid md:grid-cols-3 gap-8 mt-20">
           {stats.map((stat, index) => (
             <div
               key={stat.id}

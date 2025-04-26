@@ -149,18 +149,18 @@ export const TeamSection = () => {
           </motion.p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-8">
           {teamMembers.map((member) => (
             <motion.div
               key={member.id}
               variants={itemVariants}
-              className="group"
+              className="group max-w-[160px] sm:max-w-[200px] md:max-w-none mx-auto"
             >
-              <div className="relative overflow-hidden rounded-2xl mb-4">
+              <div className="relative overflow-hidden rounded-lg md:rounded-2xl mb-2 md:mb-4">
                 <motion.div
                   whileHover={{ scale: 1.05 }}
                   transition={{ duration: 0.3 }}
-                  className="aspect-[3/4] relative"
+                  className="aspect-[3/4] relative w-full max-w-[140px] sm:max-w-[180px] md:max-w-none mx-auto"
                 >
                   <img
                     src={member.image}
@@ -168,8 +168,8 @@ export const TeamSection = () => {
                     className="w-full h-full object-cover"
                     loading="lazy"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/70 to-black/60 opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center p-6">
-                    <p className="text-white text-sm font-inter opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-100 text-center">
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/70 to-black/60 opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center p-2 md:p-6">
+                    <p className="text-white text-[10px] leading-tight sm:text-xs md:text-sm font-inter opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-100 text-center">
                       {member.bio}
                     </p>
                   </div>
@@ -177,10 +177,12 @@ export const TeamSection = () => {
               </div>
 
               <div className="text-center">
-                <h3 className="text-xl font-playfair text-white mb-1">
+                <h3 className="text-base md:text-xl font-playfair text-white mb-0.5 md:mb-1">
                   {member.name}
                 </h3>
-                <p className="text-accent font-inter text-sm">{member.role}</p>
+                <p className="text-accent font-inter text-xs md:text-sm">
+                  {member.role}
+                </p>
               </div>
             </motion.div>
           ))}

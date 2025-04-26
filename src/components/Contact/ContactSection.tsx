@@ -4,7 +4,15 @@ import { useInView } from "react-intersection-observer";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Phone, Mail, Check, X, Upload } from "lucide-react";
+import {
+  Phone,
+  Mail,
+  Check,
+  X,
+  Upload,
+  Instagram,
+  Facebook,
+} from "lucide-react";
 import { db } from "../../firebase-config";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { supabase } from "../../lib/supabase.js";
@@ -29,7 +37,14 @@ const baseSchema = {
 // Esquema para el formulario completo
 const fullContactSchema = z.object({
   ...baseSchema,
-  projectType: z.enum(["exterior", "interior", "urban", "landscape", "other"]),
+  projectType: z.enum([
+    "exterior",
+    "interior",
+    "urban",
+    "landscape",
+    "other",
+    "complete",
+  ]),
   files: z
     .custom<FileList>()
     .refine((files) => files?.length <= 5, "Maximum of 5 files allowed")
@@ -55,6 +70,7 @@ type FullContactFormData = z.infer<typeof fullContactSchema>;
 type SimpleContactFormData = z.infer<typeof simpleContactSchema>;
 
 const projectTypes = [
+  { value: "complete", label: "Complete Project" },
   { value: "exterior", label: "Exterior Design" },
   { value: "interior", label: "Interior Design" },
   { value: "urban", label: "Urban Planning" },
@@ -262,7 +278,7 @@ export const ContactSection = () => {
       const contactData = {
         fullName: data.fullName,
         email: data.email,
-        projectType: "Quick Contact",
+        projectType: "Inquiry",
         brief: data.brief || "",
         fileUrls: [],
         createdAt: serverTimestamp(),
@@ -390,24 +406,31 @@ export const ContactSection = () => {
               <div className="space-y-6">
                 <div className="flex items-center text-gray-300">
                   <Phone className="w-5 h-5 text-accent mr-4" />
-                  <span>+1 (555) 123-4567</span>
+                  <span>+61 425 432 846</span>
                 </div>
                 <div className="flex items-center text-gray-300">
                   <Mail className="w-5 h-5 text-accent mr-4" />
                   <span>contact@r3alim.com</span>
                 </div>
+                <div className="flex items-center justify-center space-x-4 pt-4">
+                  <a
+                    href="https://www.instagram.com/realim.studio/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-gray-300 hover:text-accent transition-colors"
+                  >
+                    <Instagram className="w-6 h-6" />
+                  </a>
+                  <a
+                    href="https://www.facebook.com/r3alim"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-gray-300 hover:text-accent transition-colors"
+                  >
+                    <Facebook className="w-6 h-6" />
+                  </a>
+                </div>
               </div>
-
-              {/* <div className="mt-8 pt-8 border-t border-gray-700">
-                <h4 className="text-white font-playfair mb-4">Office Hours</h4>
-                <p className="text-gray-300">
-                  Monday - Friday: 9:00 AM - 6:00 PM
-                  <br />
-                  Saturday: By appointment
-                  <br />
-                  Sunday: Closed
-                </p>
-              </div> */}
             </div>
           </div>
 
@@ -438,7 +461,7 @@ export const ContactSection = () => {
                       : "text-gray-300 hover:text-white"
                   }`}
                 >
-                  Quick Contact
+                  Inquiry
                 </button>
               </div>
 

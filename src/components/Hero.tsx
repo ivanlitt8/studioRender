@@ -3,7 +3,12 @@ import { ChevronDown } from "lucide-react";
 import { useState, useEffect } from "react";
 
 export const Hero = () => {
-  const phrases = ["Shaping Dreams", "Building Visions", "Creating Impact"];
+  const phrases = [
+    "Shaping Dreams",
+    "Building Visions",
+    "Creating Impact",
+    "Rendering Visions",
+  ];
 
   const [currentPhraseIndex, setCurrentPhraseIndex] = useState(0);
 
@@ -62,7 +67,7 @@ export const Hero = () => {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.3, duration: 0.5 }}
         >
-          Rendering visions, building dreams.
+          Where Realism and Imagination get along.
         </motion.p>
 
         <motion.button
