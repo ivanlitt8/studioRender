@@ -1,31 +1,107 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { Play, Award, Users, Building } from "lucide-react";
+import { Play, GraduationCap, Users, Brush } from "lucide-react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useInView } from "react-intersection-observer";
 
 gsap.registerPlugin(ScrollTrigger);
 
 const stats = [
   {
     id: 1,
-    value: "15+",
-    label: "Years Experience",
-    icon: <Building className="w-6 h-6" />,
+    label: "Contextual Understanding",
+    icon: <Brush className="w-6 h-6" />,
   },
   {
     id: 2,
-    value: "200+",
-    label: "Projects Completed",
-    icon: <Award className="w-6 h-6" />,
+    label: "Built by a qualified architects team",
+    icon: <GraduationCap className="w-6 h-6" />,
   },
   {
     id: 3,
-    value: "50+",
-    label: "Team Members",
+    label: "Collaborative Experience",
     icon: <Users className="w-6 h-6" />,
   },
 ];
+
+// Componente de texto mezclado
+interface ScrambledTextProps {
+  text: string;
+  delay?: number;
+}
+
+const ScrambledText = ({ text, delay = 0 }: ScrambledTextProps) => {
+  const [scrambledText, setScrambledText] = useState("");
+  const characters =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  const finalText = text;
+  const duration = 1.5; // duración en segundos
+
+  // Ref para detectar cuando el elemento entra en el viewport
+  const [ref, inView] = useInView({
+    triggerOnce: true,
+    threshold: 0.5,
+  });
+
+  useEffect(() => {
+    // Inicializar con caracteres aleatorios
+    if (!inView) {
+      setScrambledText(
+        text.replace(/./g, () =>
+          characters.charAt(Math.floor(Math.random() * characters.length))
+        )
+      );
+      return;
+    }
+
+    let startTime: number | null = null;
+    let animationFrameId: number | null = null;
+
+    const scramble = (timestamp: number) => {
+      if (!startTime) startTime = timestamp - delay * 1000;
+      const elapsed = timestamp - startTime;
+      const progress = Math.min(elapsed / (duration * 1000), 1);
+
+      // Generar texto mezclado
+      let result = "";
+      for (let i = 0; i < finalText.length; i++) {
+        // Si el caracter ya debería estar establecido basado en el progreso
+        if (i < Math.floor(progress * finalText.length)) {
+          result += finalText[i];
+        } else {
+          // Elegir un caracter aleatorio
+          result += characters.charAt(
+            Math.floor(Math.random() * characters.length)
+          );
+        }
+      }
+
+      setScrambledText(result);
+
+      // Si no ha terminado, continuar la animación
+      if (progress < 1) {
+        animationFrameId = requestAnimationFrame(scramble);
+      }
+    };
+
+    // Iniciar la animación
+    animationFrameId = requestAnimationFrame(scramble);
+
+    // Limpiar la animación cuando el componente se desmonta
+    return () => {
+      if (animationFrameId) {
+        cancelAnimationFrame(animationFrameId);
+      }
+    };
+  }, [finalText, delay, duration, inView, text, characters]);
+
+  return (
+    <div ref={ref} className="text-gray-400 font-inter">
+      {scrambledText}
+    </div>
+  );
+};
 
 export const AboutSection = () => {
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
@@ -270,10 +346,7 @@ export const AboutSection = () => {
               <div className="flex justify-center mb-4 text-accent">
                 {stat.icon}
               </div>
-              <div className="stat-value text-3xl font-playfair text-white mb-2">
-                {stat.value}
-              </div>
-              <div className="text-gray-400 font-inter">{stat.label}</div>
+              <ScrambledText text={stat.label} delay={0.3 + index * 0.2} />
             </div>
           ))}
         </div>

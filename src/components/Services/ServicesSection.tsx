@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import {
@@ -8,6 +8,8 @@ import {
   Rotate3d,
   PenTool,
   Layout,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -28,7 +30,7 @@ const services: Service[] = [
     id: 1,
     title: "Consultation Services",
     description:
-      "We guide your vision from the beginning. Our consultation services help you define goals, set design direction, and make informed decisions that align with your project's purpose and potential.",
+      "We guide your vision from the start, helping you define goals, set direction, and make decisions true to your project's purpose.",
     icon: <Compass className="w-8 h-8" />,
     benefits: [
       "Initial site and concept analysis",
@@ -103,7 +105,7 @@ const services: Service[] = [
     id: 6,
     title: "Custom Design Solutions",
     description:
-      "We offer tailored visual solutions based on your unique project needs - no templates, just personalized design storytelling that stands out, thanks to our team of professionals with a strong background in architecture.",
+      "We craft custom visual solutions shaped around your project's unique story — no templates, just original design powered by a team with a strong architectural background.",
     icon: <PenTool className="w-8 h-8" />,
     benefits: [
       "Design packs based on competition briefs",
@@ -117,10 +119,36 @@ const services: Service[] = [
 ];
 
 export const ServicesSection = () => {
-  const [ref] = useInView({
-    triggerOnce: false,
+  const [ref, inView] = useInView({
+    triggerOnce: true,
     threshold: 0.1,
   });
+
+  // Ref para el contenedor de tarjetas
+  const servicesContainerRef = useRef<HTMLDivElement>(null);
+  // Ref para los botones de navegación
+  const scrollLeftRef = useRef<HTMLButtonElement>(null);
+  const scrollRightRef = useRef<HTMLButtonElement>(null);
+
+  // Función para desplazarse a la izquierda
+  const scrollLeft = () => {
+    if (servicesContainerRef.current) {
+      servicesContainerRef.current.scrollBy({
+        left: -280,
+        behavior: "smooth",
+      });
+    }
+  };
+
+  // Función para desplazarse a la derecha
+  const scrollRight = () => {
+    if (servicesContainerRef.current) {
+      servicesContainerRef.current.scrollBy({
+        left: 280,
+        behavior: "smooth",
+      });
+    }
+  };
 
   useEffect(() => {
     // Animación para el título y subtítulo cuando entran en el viewport
@@ -157,41 +185,76 @@ export const ServicesSection = () => {
       }
     );
 
-    // Animación para las cards cuando entran en el viewport
-    const serviceCards = gsap.utils.toArray<HTMLElement>(".service-card");
-    serviceCards.forEach((card, i) => {
-      gsap.fromTo(
-        card,
-        {
-          opacity: 0,
-          y: 100,
-          scale: 0.9,
-        },
-        {
-          opacity: 1,
-          y: 0,
-          scale: 1,
-          duration: 0.8,
-          delay: i * 0.15, // Efecto escalonado
-          ease: "power2.out",
-          scrollTrigger: {
-            trigger: card,
-            start: "top 85%",
-            toggleActions: "play none none reverse",
+    // Verificamos si estamos en una pantalla móvil
+    const isMobile = window.innerWidth < 768;
+
+    if (!isMobile) {
+      // Animación para las cards en desktop
+      const serviceCards = gsap.utils.toArray<HTMLElement>(".service-card");
+      serviceCards.forEach((card, i) => {
+        gsap.fromTo(
+          card,
+          {
+            opacity: 0,
+            y: 100,
+            scale: 0.9,
           },
-        }
-      );
-    });
+          {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            duration: 0.8,
+            delay: i * 0.15, // Efecto escalonado
+            ease: "power2.out",
+            scrollTrigger: {
+              trigger: card,
+              start: "top 85%",
+              toggleActions: "play none none reverse",
+            },
+          }
+        );
+      });
+    }
+
+    // Gestionar la visibilidad de los botones de navegación en función del scroll
+    const handleScroll = () => {
+      if (
+        servicesContainerRef.current &&
+        scrollLeftRef.current &&
+        scrollRightRef.current
+      ) {
+        const { scrollLeft, scrollWidth, clientWidth } =
+          servicesContainerRef.current;
+
+        // Mostrar/ocultar botón izquierdo
+        scrollLeftRef.current.style.opacity = scrollLeft > 10 ? "1" : "0";
+
+        // Mostrar/ocultar botón derecho
+        const isAtEnd = Math.ceil(scrollLeft + clientWidth) >= scrollWidth - 10;
+        scrollRightRef.current.style.opacity = isAtEnd ? "0" : "1";
+      }
+    };
+
+    // Agregar listener para el evento scroll en el contenedor
+    const currentContainer = servicesContainerRef.current;
+    if (currentContainer) {
+      currentContainer.addEventListener("scroll", handleScroll);
+      // Inicializar el estado de los botones
+      handleScroll();
+    }
 
     return () => {
       ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
+      if (currentContainer) {
+        currentContainer.removeEventListener("scroll", handleScroll);
+      }
     };
-  }, []);
+  }, [inView]);
 
   return (
     <section id="services" className="py-20 px-4 bg-primary">
       <div ref={ref} className="max-w-7xl mx-auto">
-        <div className="text-center mb-16">
+        <div className="text-center mb-10">
           <h2 className="services-title text-4xl md:text-5xl font-playfair text-white mb-4">
             Our Services
           </h2>
@@ -200,85 +263,139 @@ export const ServicesSection = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {services.map((service) => (
-            <motion.div
-              key={service.id}
-              className="service-card relative h-[400px] group overflow-hidden rounded-lg"
-              whileHover={{
-                scale: 1.03,
-                transition: { duration: 0.3 },
-              }}
-            >
-              {/* Imagen de fondo y overlay inicial */}
-              <div
-                className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110"
-                style={{ backgroundImage: `url(${service.image})` }}
-              >
-                <div className="absolute inset-0 bg-black/40 group-hover:bg-black/70 transition-colors duration-500" />
-              </div>
+        {/* Contenedor con scroll horizontal nativo */}
+        <div className="relative">
+          {/* Botón scroll izquierdo */}
+          <button
+            ref={scrollLeftRef}
+            onClick={scrollLeft}
+            className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-accent/80 text-white p-2 rounded-full opacity-0 transition-opacity duration-300 md:hidden"
+            aria-label="Scroll left"
+          >
+            <ChevronLeft className="w-5 h-5" />
+          </button>
 
-              {/* Contenido inicial (solo título) */}
-              <div className="absolute inset-0 flex flex-col justify-end p-6 translate-y-0 transition-transform duration-500 group-hover:-translate-y-full">
-                <div className="p-3 rounded-lg bg-accent/10 text-accent w-fit mb-4">
-                  {service.icon}
-                </div>
-                <h3 className="text-2xl font-playfair text-white">
-                  {service.title}
-                </h3>
-              </div>
-
-              {/* Contenido detallado (visible en hover) */}
+          {/* Contenedor de servicios con scroll horizontal nativo */}
+          <div
+            ref={servicesContainerRef}
+            className="md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-8 flex md:flex-wrap flex-nowrap space-x-4 md:space-x-0 w-full md:w-auto overflow-x-auto pb-6 md:pb-0 hide-scrollbar"
+            style={{ scrollSnapType: "x mandatory" }}
+          >
+            {services.map((service) => (
               <motion.div
-                className="absolute inset-0 p-6 flex flex-col bg-secondary/95 translate-y-full transition-transform duration-500 group-hover:translate-y-0"
+                key={service.id}
+                className="service-card relative h-[400px] md:h-[400px] md:w-auto w-[260px] flex-shrink-0 group overflow-hidden rounded-lg scroll-snap-align-start"
+                style={{ scrollSnapAlign: "start" }}
                 initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.2 }}
+                animate={inView ? { opacity: 1 } : { opacity: 0 }}
+                transition={{ duration: 0.5 }}
+                whileHover={{
+                  scale: 1.03,
+                  transition: { duration: 0.3 },
+                }}
               >
-                <div className="flex items-center mb-4">
-                  <div className="p-3 rounded-lg bg-accent/10 text-accent">
+                {/* Imagen de fondo y overlay inicial */}
+                <div
+                  className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110"
+                  style={{ backgroundImage: `url(${service.image})` }}
+                >
+                  <div className="absolute inset-0 bg-black/40 group-hover:bg-black/70 transition-colors duration-500" />
+                </div>
+
+                {/* Contenido inicial (solo título) */}
+                <div className="absolute inset-0 flex flex-col justify-end p-6 translate-y-0 transition-transform duration-500 group-hover:-translate-y-full">
+                  <div className="p-2 md:p-3 rounded-lg bg-accent/10 text-accent w-fit mb-2 md:mb-4">
                     {service.icon}
                   </div>
-                  <h3 className="text-xl font-playfair text-white ml-4">
+                  <h3 className="text-xl md:text-2xl font-playfair text-white">
                     {service.title}
                   </h3>
                 </div>
 
-                <p className="text-gray-300 mb-6 font-inter">
-                  {service.description}
-                </p>
-
-                <div className="space-y-2 flex-grow">
-                  {service.benefits.map((benefit, index) => (
-                    <div
-                      key={index}
-                      className="flex items-center text-sm text-gray-400"
-                    >
-                      <div className="w-1.5 h-1.5 rounded-full bg-accent mr-2" />
-                      {benefit}
-                    </div>
-                  ))}
-                </div>
-
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="mt-4 px-6 py-2 bg-accent text-white rounded-full font-inter text-sm hover:bg-accent/90 transition-colors duration-300"
-                  onClick={() => {
-                    const message = encodeURIComponent(
-                      `Hello, I am interested in the ${service.title} service`
-                    );
-                    window.open(
-                      `https://wa.me/61425432846?text=${message}`,
-                      "_blank"
-                    );
-                  }}
+                {/* Contenido detallado (visible en hover) */}
+                <motion.div
+                  className="absolute inset-0 p-4 md:p-6 flex flex-col bg-secondary/95 translate-y-full transition-transform duration-500 group-hover:translate-y-0"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.2 }}
                 >
-                  Get Info
-                </motion.button>
+                  <div className="flex items-center mb-2 md:mb-4">
+                    <div className="p-2 md:p-3 rounded-lg bg-accent/10 text-accent">
+                      {service.icon}
+                    </div>
+                    <h3 className="text-lg md:text-xl font-playfair text-white ml-3 md:ml-4">
+                      {service.title}
+                    </h3>
+                  </div>
+
+                  <p className="text-gray-300 text-sm md:text-base mb-3 md:mb-6 font-inter">
+                    {service.description.length > 100 && window.innerWidth < 768
+                      ? `${service.description.substring(0, 100)}...`
+                      : service.description}
+                  </p>
+
+                  <div className="space-y-1 md:space-y-2 flex-grow overflow-y-auto">
+                    {service.benefits
+                      .slice(
+                        0,
+                        window.innerWidth < 768 ? 3 : service.benefits.length
+                      )
+                      .map((benefit, index) => (
+                        <div
+                          key={index}
+                          className="flex items-center text-xs md:text-sm text-gray-400"
+                        >
+                          <div className="w-1.5 h-1.5 rounded-full bg-accent mr-2" />
+                          {benefit}
+                        </div>
+                      ))}
+                    {window.innerWidth < 768 && service.benefits.length > 3 && (
+                      <div className="text-xs text-accent mt-1">
+                        + more benefits
+                      </div>
+                    )}
+                  </div>
+
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="mt-2 md:mt-4 px-4 md:px-6 py-1.5 md:py-2 bg-accent text-white rounded-full font-inter text-xs md:text-sm hover:bg-accent/90 transition-colors duration-300"
+                    onClick={() => {
+                      const message = encodeURIComponent(
+                        `Hello, I am interested in the ${service.title} service`
+                      );
+                      window.open(
+                        `https://wa.me/61425432846?text=${message}`,
+                        "_blank"
+                      );
+                    }}
+                  >
+                    Get Info
+                  </motion.button>
+                </motion.div>
               </motion.div>
-            </motion.div>
-          ))}
+            ))}
+          </div>
+
+          {/* Botón scroll derecho */}
+          <button
+            ref={scrollRightRef}
+            onClick={scrollRight}
+            className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-accent/80 text-white p-2 rounded-full transition-opacity duration-300 md:hidden"
+            aria-label="Scroll right"
+          >
+            <ChevronRight className="w-5 h-5" />
+          </button>
+        </div>
+
+        {/* Indicadores de página (solo móvil) */}
+        <div className="flex justify-center space-x-2 mt-6 md:hidden">
+          <div className="w-2 h-2 rounded-full bg-accent"></div>
+          <div className="w-2 h-2 rounded-full bg-white/30"></div>
+          <div className="w-2 h-2 rounded-full bg-white/30"></div>
+          <div className="w-2 h-2 rounded-full bg-white/30"></div>
+          <div className="w-2 h-2 rounded-full bg-white/30"></div>
+          <div className="w-2 h-2 rounded-full bg-white/30"></div>
         </div>
       </div>
     </section>

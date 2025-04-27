@@ -36,9 +36,14 @@ export const Navbar = () => {
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
-            className="text-white font-playfair text-2xl"
+            className="text-white font-playfair text-2xl flex items-center space-x-2"
           >
-            R3ALIM
+            <img
+              src="https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/images//logo.png"
+              alt="R3ALIM Logo"
+              className="w-12 h-12"
+            />
+            <span>R3ALIM</span>
           </motion.div>
 
           {/* Desktop Menu */}

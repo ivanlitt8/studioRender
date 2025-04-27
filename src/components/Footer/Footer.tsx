@@ -1,4 +1,3 @@
-import React from "react";
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import {
@@ -8,7 +7,6 @@ import {
   Instagram,
   Twitter,
   Facebook,
-  Building2,
 } from "lucide-react";
 
 const socialLinks = [
@@ -74,7 +72,11 @@ export const Footer = () => {
           {/* Brand Column */}
           <motion.div variants={itemVariants} className="space-y-4">
             <div className="flex items-center space-x-2 text-white mb-4">
-              <Building2 className="w-8 h-8 text-accent" />
+              <img
+                src="https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/images//logo.png"
+                alt="R3ALIM Logo"
+                className="w-12 h-12"
+              />
               <span className="text-2xl font-playfair">R3ALIM</span>
             </div>
             <p className="text-gray-400 font-inter">
