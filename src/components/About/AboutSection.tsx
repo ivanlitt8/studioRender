@@ -263,22 +263,22 @@ export const AboutSection = () => {
               WHO ARE WE
             </h2>
             <p className="about-paragraph text-gray-300 mb-6 leading-relaxed font-inter">
-              R3ALIM, a studio specialised in architectural visualisation and
-              design storytelling.
+              WHO ARE WE R3ALIM, a studio specialised in architectural
+              visualisation and design storytelling.
               <br />
               We help you bring your architectural ideas to life with clarity,
               atmosphere, and depth—always tailored to your specific project.
-              Our name comes from the fusion of "Real" and "Imagination",
+              Our name comes from the fusion of “Real” and “Imagination”,
               because we believe architecture lives right at that intersection:
-              where imagination becomes real, through design.
+              where imagination becomes real, through design. We’re not just
+              rendering images—we’re shaping the way your work is perceived,
+              understood, and remembered.
             </p>
             <p className="about-paragraph text-gray-300 mb-8 leading-relaxed font-inter">
-              We're not just rendering images—we're shaping the way your work is
-              perceived, understood, and remembered. Our approach is rooted in
-              architecture itself: our team is formed by architects and
-              designers who understand the language of space, scale, and
-              intention. This means that every project is treated not only with
-              visual precision, but also with technical and conceptual
+              Our approach is rooted in architecture itself: our team is formed
+              by architects and designers who understand the language of space,
+              scale, and intention. This means that every project is treated not
+              only with visual precision, but also with technical and conceptual
               awareness.
             </p>
 
