@@ -349,7 +349,7 @@ export const ServicesSection = () => {
                           {benefit}
                         </div>
                       ))}
-                    {window.innerWidth < 768 && service.benefits.length > 3 && (
+                    {window.innerWidth < 768 && service.benefits.length > 4 && (
                       <div className="text-xs text-accent mt-1">
                         + more benefits
                       </div>
