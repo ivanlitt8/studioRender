@@ -387,7 +387,7 @@ export const ContactSection = () => {
         className="max-w-7xl mx-auto px-4"
       >
         <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-playfair text-white mb-4">
+          <h2 className="text-4xl md:text-5xl font-futura text-white mb-4">
             Get in Touch
           </h2>
           <p className="text-gray-300 max-w-2xl mx-auto font-inter">
@@ -400,7 +400,7 @@ export const ContactSection = () => {
           {/* Contact Information */}
           <div className="lg:col-span-1">
             <div className="bg-secondary rounded-lg p-8">
-              <h3 className="text-2xl font-playfair text-white mb-6">
+              <h3 className="text-2xl font-futura text-white mb-6">
                 Contact Information
               </h3>
               <div className="space-y-6">
@@ -437,7 +437,7 @@ export const ContactSection = () => {
           {/* Contact Form with Tabs */}
           <div className="lg:col-span-2">
             <div className="bg-secondary rounded-lg p-8">
-              <h3 className="text-2xl font-playfair text-white mb-6">
+              <h3 className="text-2xl font-futura text-white mb-6">
                 Request Quote
               </h3>
 

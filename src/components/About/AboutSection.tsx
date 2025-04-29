@@ -259,7 +259,7 @@ export const AboutSection = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center relative">
           {/* Content Section */}
           <div className="z-10">
-            <h2 className="about-title text-4xl md:text-5xl font-playfair text-white mb-6">
+            <h2 className="about-title text-4xl md:text-5xl font-futura text-white mb-6">
               WHO ARE WE
             </h2>
             <p className="about-paragraph text-gray-300 mb-6 leading-relaxed font-inter">

@@ -135,7 +135,7 @@ export const TeamSection = () => {
       >
         <div className="text-center mb-16">
           <motion.h2
-            className="text-4xl md:text-5xl font-playfair text-white mb-4"
+            className="text-4xl md:text-5xl font-futura text-white mb-4"
             variants={itemVariants}
           >
             Meet Our Team
@@ -177,7 +177,7 @@ export const TeamSection = () => {
               </div>
 
               <div className="text-center">
-                <h3 className="text-base md:text-xl font-playfair text-white mb-0.5 md:mb-1">
+                <h3 className="text-base md:text-xl font-futura text-white mb-0.5 md:mb-1">
                   {member.name}
                 </h3>
                 <p className="text-accent font-inter text-xs md:text-sm">

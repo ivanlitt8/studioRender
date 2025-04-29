@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
+import { useState } from "react";
 import {
   Phone,
   Mail,
@@ -8,6 +9,7 @@ import {
   Twitter,
   Facebook,
 } from "lucide-react";
+import { TermsModal } from "../UI/TermsModal";
 
 const socialLinks = [
   { icon: <Linkedin className="w-5 h-5" />, href: "#", label: "LinkedIn" },
@@ -33,6 +35,7 @@ const quickLinks = [
 ];
 
 export const Footer = () => {
+  const [isTermsModalOpen, setIsTermsModalOpen] = useState(false);
   const [ref, inView] = useInView({
     triggerOnce: true,
     threshold: 0.1,
@@ -77,7 +80,7 @@ export const Footer = () => {
                 alt="R3ALIM Logo"
                 className="w-12 h-12"
               />
-              <span className="text-2xl font-playfair">R3ALIM</span>
+              <span className="text-2xl font-futura">R3ALIM</span>
             </div>
             <p className="text-gray-400 font-inter">
               Crafting exceptional architectural experiences through innovative
@@ -87,9 +90,7 @@ export const Footer = () => {
 
           {/* Quick Links */}
           <motion.div variants={itemVariants} className="space-y-4">
-            <h3 className="text-white font-playfair text-xl mb-6">
-              Quick Links
-            </h3>
+            <h3 className="text-white font-futura text-xl mb-6">Quick Links</h3>
             <nav className="space-y-3">
               {quickLinks.map((link) => (
                 <motion.a
@@ -101,12 +102,19 @@ export const Footer = () => {
                   {link.name}
                 </motion.a>
               ))}
+              <motion.button
+                onClick={() => setIsTermsModalOpen(true)}
+                className="block text-gray-400 hover:text-accent transition-colors duration-300 font-inter text-left w-full"
+                whileHover={{ x: 5 }}
+              >
+                Terms & Conditions
+              </motion.button>
             </nav>
           </motion.div>
 
           {/* Contact Info */}
           <motion.div variants={itemVariants} className="space-y-4">
-            <h3 className="text-white font-playfair text-xl mb-6">Contact</h3>
+            <h3 className="text-white font-futura text-xl mb-6">Contact</h3>
             <div className="space-y-4">
               <a
                 href="tel:+15551234567"
@@ -127,7 +135,7 @@ export const Footer = () => {
 
           {/* Social Links */}
           <motion.div variants={itemVariants} className="space-y-4">
-            <h3 className="text-white font-playfair text-xl mb-6">Follow Us</h3>
+            <h3 className="text-white font-futura text-xl mb-6">Follow Us</h3>
             <div className="flex space-x-4">
               {socialLinks.map((social) => (
                 <motion.a
@@ -163,6 +171,10 @@ export const Footer = () => {
           </p>
         </motion.div>
       </motion.div>
+      <TermsModal
+        isOpen={isTermsModalOpen}
+        onClose={() => setIsTermsModalOpen(false)}
+      />
     </footer>
   );
 };

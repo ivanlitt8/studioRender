@@ -255,7 +255,7 @@ export const ServicesSection = () => {
     <section id="services" className="py-20 px-4 bg-primary">
       <div ref={ref} className="max-w-7xl mx-auto">
         <div className="text-center mb-10">
-          <h2 className="services-title text-4xl md:text-5xl font-playfair text-white mb-4">
+          <h2 className="services-title text-4xl md:text-5xl font-futura text-white mb-4">
             Our Services
           </h2>
           <p className="services-subtitle text-gray-300 max-w-2xl mx-auto font-inter">
@@ -307,7 +307,7 @@ export const ServicesSection = () => {
                   <div className="p-2 md:p-3 rounded-lg bg-accent/10 text-accent w-fit mb-2 md:mb-4">
                     {service.icon}
                   </div>
-                  <h3 className="text-xl md:text-2xl font-playfair text-white">
+                  <h3 className="text-xl md:text-2xl font-futura text-white">
                     {service.title}
                   </h3>
                 </div>
@@ -323,18 +323,18 @@ export const ServicesSection = () => {
                     <div className="p-2 md:p-3 rounded-lg bg-accent/10 text-accent">
                       {service.icon}
                     </div>
-                    <h3 className="text-lg md:text-xl font-playfair text-white ml-3 md:ml-4">
+                    <h3 className="text-lg md:text-xl font-futura text-white ml-3 md:ml-4">
                       {service.title}
                     </h3>
                   </div>
 
-                  <p className="text-gray-300 text-sm md:text-base mb-3 md:mb-6 font-inter">
+                  <p className="text-gray-400 text-sm md:text-base mb-3 md:mb-6 font-inter">
                     {service.description.length > 100 && window.innerWidth < 768
                       ? `${service.description.substring(0, 100)}...`
                       : service.description}
                   </p>
 
-                  <div className="space-y-1 md:space-y-2 flex-grow overflow-y-auto">
+                  <div className="space-y-1 md:space-y-2 flex-grow overflow-y-auto hide-scrollbar">
                     {service.benefits
                       .slice(
                         0,

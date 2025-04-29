@@ -63,15 +63,6 @@ const projects: Project[] = [
     description: "Sustainable retreat integrated with mountain surroundings",
   },
   {
-    id: 5,
-    title: "Industrial Loft Interior",
-    mainCategory: "interior",
-    subCategory: "industrial",
-    imageUrl:
-      "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//7.webp",
-    description: "Raw materials and open space design",
-  },
-  {
     id: 6,
     title: "Rustic Cabin Interior",
     mainCategory: "interior",
@@ -79,15 +70,6 @@ const projects: Project[] = [
     imageUrl:
       "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//Escena%201%20(1).webp",
     description: "Warm and cozy interior with natural wood elements",
-  },
-  {
-    id: 7,
-    title: "Contemporary Interior Lounge",
-    mainCategory: "interior",
-    subCategory: "contemporary",
-    imageUrl:
-      "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//Escena%201.webp",
-    description: "Modern lounge space with artistic elements",
   },
   {
     id: 8,
@@ -243,16 +225,11 @@ const mainCategories = [
 
 const subCategories = {
   exterior: [
-    { id: "modern", label: "Modern" },
-    { id: "classic", label: "Classic" },
-    { id: "contemporary", label: "Contemporary" },
+    { id: "residential", label: "Residential Scale" },
+    { id: "commercial", label: "Commercial Scale" },
+    { id: "high-density", label: "High-Density Scale" },
   ],
-  interior: [
-    { id: "minimalist", label: "Minimalist" },
-    { id: "industrial", label: "Industrial" },
-    { id: "rustic", label: "Rustic" },
-    { id: "contemporary", label: "Contemporary" },
-  ],
+  interior: [],
 };
 
 const breakpointColumns = {
@@ -365,7 +342,7 @@ export const GallerySection = () => {
   return (
     <section id="gallery" className="py-20 px-4 bg-secondary min-h-screen">
       <div ref={ref} className="max-w-7xl mx-auto">
-        <h2 className="gallery-title text-4xl md:text-5xl font-playfair text-white text-center mb-4">
+        <h2 className="gallery-title text-4xl md:text-5xl font-futura text-white text-center mb-4">
           Our Portfolio
         </h2>
         <p className="gallery-subtitle text-gray-300 text-center mb-12 font-inter">
@@ -396,36 +373,37 @@ export const GallerySection = () => {
 
         {/* Sub Categories */}
         <AnimatePresence mode="wait">
-          {selectedMainCategory !== "all" && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.3 }}
-              className="overflow-hidden"
-            >
-              <div className="flex flex-wrap justify-center gap-3 mb-10">
-                {subCategories[selectedMainCategory].map((category) => (
-                  <motion.button
-                    key={category.id}
-                    onClick={() =>
-                      setSelectedSubCategory(category.id as SubCategory)
-                    }
-                    className={`px-6 py-2 rounded-full font-inter text-xs transition-all duration-300
+          {selectedMainCategory !== "all" &&
+            subCategories[selectedMainCategory].length > 0 && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                exit={{ opacity: 0, height: 0 }}
+                transition={{ duration: 0.3 }}
+                className="overflow-hidden"
+              >
+                <div className="flex flex-wrap justify-center gap-3 mb-10">
+                  {subCategories[selectedMainCategory].map((category) => (
+                    <motion.button
+                      key={category.id}
+                      onClick={() =>
+                        setSelectedSubCategory(category.id as SubCategory)
+                      }
+                      className={`px-6 py-2 rounded-full font-inter text-xs transition-all duration-300
                       ${
                         selectedSubCategory === category.id
                           ? "bg-accent/20 text-accent border border-accent"
                           : "bg-gray-800/50 text-gray-400 border border-gray-700 hover:text-gray-200"
                       }`}
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    {category.label}
-                  </motion.button>
-                ))}
-              </div>
-            </motion.div>
-          )}
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                    >
+                      {category.label}
+                    </motion.button>
+                  ))}
+                </div>
+              </motion.div>
+            )}
         </AnimatePresence>
 
         {/* Gallery Grid */}
@@ -461,7 +439,7 @@ export const GallerySection = () => {
                     className="absolute inset-0 w-full h-full object-cover transform transition-transform duration-500 group-hover:scale-110"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4">
-                    <h3 className="text-white font-playfair text-lg mb-1">
+                    <h3 className="text-white font-futura text-lg mb-1">
                       {project.title}
                     </h3>
                     <p className="text-gray-300 text-sm font-inter">
@@ -493,6 +471,7 @@ export const GallerySection = () => {
                 onClick={(e) => e.stopPropagation()}
               >
                 <button
+                  title="Close"
                   className="absolute top-4 right-4 bg-black/50 rounded-full p-2 text-white z-10 hover:bg-black transition-colors duration-300"
                   onClick={() => setSelectedProject(null)}
                 >
@@ -506,7 +485,7 @@ export const GallerySection = () => {
                   />
                 </div>
                 <div className="p-6">
-                  <h3 className="text-white font-playfair text-2xl mb-2">
+                  <h3 className="text-white font-futura text-2xl mb-2">
                     {selectedProject.title}
                   </h3>
                   <p className="text-gray-300 mb-4 font-inter">

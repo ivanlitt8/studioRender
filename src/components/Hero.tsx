@@ -42,7 +42,7 @@ export const Hero = () => {
 
       <div className="relative h-full flex flex-col items-center justify-center text-white px-4">
         <motion.h1
-          className="font-playfair text-5xl md:text-7xl text-center mb-6 flex items-center justify-center flex-wrap"
+          className="font-futura text-5xl md:text-7xl text-center mb-6 flex items-center justify-center flex-wrap"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}

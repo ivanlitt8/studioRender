@@ -36,7 +36,7 @@ export const Navbar = () => {
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
-            className="text-white font-playfair text-2xl flex items-center space-x-2"
+            className="text-white font-futura text-2xl flex items-center space-x-2"
           >
             <img
               src="https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/images//logo.png"
