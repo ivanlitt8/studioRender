@@ -1,11 +1,13 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useLayoutEffect } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { Play, GraduationCap, Users, Brush } from "lucide-react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useInView } from "react-intersection-observer";
 
-gsap.registerPlugin(ScrollTrigger);
+if (typeof window !== "undefined") {
+  gsap.registerPlugin(ScrollTrigger);
+}
 
 const stats = [
   {
@@ -38,14 +40,12 @@ const ScrambledText = ({ text, delay = 0 }: ScrambledTextProps) => {
   const finalText = text;
   const duration = 1.5; // duración en segundos
 
-  // Ref para detectar cuando el elemento entra en el viewport
   const [ref, inView] = useInView({
     triggerOnce: true,
     threshold: 0.5,
   });
 
   useEffect(() => {
-    // Inicializar con caracteres aleatorios
     if (!inView) {
       setScrambledText(
         text.replace(/./g, () =>
@@ -63,14 +63,11 @@ const ScrambledText = ({ text, delay = 0 }: ScrambledTextProps) => {
       const elapsed = timestamp - startTime;
       const progress = Math.min(elapsed / (duration * 1000), 1);
 
-      // Generar texto mezclado
       let result = "";
       for (let i = 0; i < finalText.length; i++) {
-        // Si el caracter ya debería estar establecido basado en el progreso
         if (i < Math.floor(progress * finalText.length)) {
           result += finalText[i];
         } else {
-          // Elegir un caracter aleatorio
           result += characters.charAt(
             Math.floor(Math.random() * characters.length)
           );
@@ -78,17 +75,12 @@ const ScrambledText = ({ text, delay = 0 }: ScrambledTextProps) => {
       }
 
       setScrambledText(result);
-
-      // Si no ha terminado, continuar la animación
       if (progress < 1) {
         animationFrameId = requestAnimationFrame(scramble);
       }
     };
-
-    // Iniciar la animación
     animationFrameId = requestAnimationFrame(scramble);
 
-    // Limpiar la animación cuando el componente se desmonta
     return () => {
       if (animationFrameId) {
         cancelAnimationFrame(animationFrameId);
@@ -109,8 +101,8 @@ export const AboutSection = () => {
   const { scrollY } = useScroll();
   const y1 = useTransform(scrollY, [0, 1000], [0, 200]);
   const y2 = useTransform(scrollY, [0, 1000], [0, -200]);
+  const sectionRef = useRef<HTMLElement>(null);
 
-  // Gestionar la reproducción automática cuando el video entra en el viewport
   useEffect(() => {
     if (videoRef.current) {
       const observer = new IntersectionObserver(
@@ -135,116 +127,148 @@ export const AboutSection = () => {
     }
   }, []);
 
-  // Animaciones con GSAP
-  useEffect(() => {
-    // Título
-    gsap.fromTo(
-      ".about-title",
-      { opacity: 0, y: -50 },
-      {
-        opacity: 1,
-        y: 0,
-        duration: 1,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: ".about-title",
-          start: "top 80%",
-          toggleActions: "play none none reverse",
-        },
-      }
-    );
+  useLayoutEffect(() => {
+    const allTriggers = ScrollTrigger.getAll();
+    allTriggers.forEach((trigger) => trigger.kill());
 
-    // Párrafos con efecto secuencial
-    gsap.utils
-      .toArray<HTMLElement>(".about-paragraph")
-      .forEach((paragraph, i) => {
-        gsap.fromTo(
-          paragraph,
-          { opacity: 0, y: 30 },
-          {
-            opacity: 1,
-            y: 0,
-            duration: 0.8,
-            delay: 0.2 + i * 0.2,
-            ease: "power2.out",
-            scrollTrigger: {
-              trigger: paragraph,
-              start: "top 85%",
-              toggleActions: "play none none reverse",
-            },
-          }
-        );
-      });
+    gsap.registerPlugin(ScrollTrigger);
 
-    // Video con efecto de zoom
-    gsap.fromTo(
-      ".video-container",
-      { opacity: 0, scale: 0.9 },
-      {
-        opacity: 1,
-        scale: 1,
-        duration: 1,
-        ease: "back.out(1.7)",
-        scrollTrigger: {
-          trigger: ".video-container",
-          start: "top 75%",
-          toggleActions: "play none none reverse",
-        },
-      }
-    );
-
-    // Estadísticas con contador
-    gsap.utils.toArray<HTMLElement>(".stat-value").forEach((stat, i) => {
-      const originalValue = stat.innerText;
-
-      // Reiniciar a cero
-      stat.innerText = "0";
-
-      // Animación de conteo
-      gsap.to(stat, {
-        innerText: originalValue,
-        duration: 2,
-        delay: 0.3 + i * 0.2,
-        ease: "power2.out",
-        snap: { innerText: 1 },
-        scrollTrigger: {
-          trigger: stat,
-          start: "top 85%",
-          toggleActions: "play none none reset",
-        },
-        onUpdate: function () {
-          stat.innerText = this.targets()[0].innerText.includes("+")
-            ? this.targets()[0].innerText
-            : `${this.targets()[0].innerText}+`;
-        },
-      });
-
-      // Animación del contenedor de estadísticas
+    const initAnimations = setTimeout(() => {
       gsap.fromTo(
-        `.stat-container-${i}`,
-        { opacity: 0, y: 50 },
+        "#about .about-title",
+        { opacity: 0, y: -50 },
         {
           opacity: 1,
           y: 0,
-          duration: 0.8,
-          delay: 0.4 + i * 0.2,
-          ease: "back.out(1.7)",
+          duration: 1,
+          ease: "power3.out",
           scrollTrigger: {
-            trigger: `.stat-container-${i}`,
-            start: "top 85%",
+            trigger: "#about .about-title",
+            start: "top 80%",
             toggleActions: "play none none reverse",
+            id: "about-title-" + Date.now(), // ID único
           },
         }
       );
-    });
 
+      gsap.utils
+        .toArray<HTMLElement>("#about .about-paragraph")
+        .forEach((paragraph, i) => {
+          gsap.fromTo(
+            paragraph,
+            { opacity: 0, y: 30 },
+            {
+              opacity: 1,
+              y: 0,
+              duration: 0.8,
+              delay: 0.2 + i * 0.2,
+              ease: "power2.out",
+              scrollTrigger: {
+                trigger: paragraph,
+                start: "top 85%",
+                toggleActions: "play none none reverse",
+                id: `about-paragraph-${i}`,
+              },
+            }
+          );
+        });
+
+      // Video con efecto de zoom
+      gsap.fromTo(
+        "#about .video-container",
+        { opacity: 0, scale: 0.9 },
+        {
+          opacity: 1,
+          scale: 1,
+          duration: 1,
+          ease: "back.out(1.7)",
+          scrollTrigger: {
+            trigger: "#about .video-container",
+            start: "top 75%",
+            toggleActions: "play none none reverse",
+            id: "about-video",
+          },
+        }
+      );
+
+      // Estadísticas con contador
+      gsap.utils
+        .toArray<HTMLElement>("#about .stat-value")
+        .forEach((stat, i) => {
+          const originalValue = stat.innerText;
+
+          // Reiniciar a cero
+          stat.innerText = "0";
+
+          // Animación de conteo
+          gsap.to(stat, {
+            innerText: originalValue,
+            duration: 2,
+            delay: 0.3 + i * 0.2,
+            ease: "power2.out",
+            snap: { innerText: 1 },
+            scrollTrigger: {
+              trigger: stat,
+              start: "top 85%",
+              toggleActions: "play none none reset",
+              id: `about-stat-value-${i}`,
+            },
+            onUpdate: function () {
+              stat.innerText = this.targets()[0].innerText.includes("+")
+                ? this.targets()[0].innerText
+                : `${this.targets()[0].innerText}+`;
+            },
+          });
+
+          // Animación del contenedor de estadísticas
+          gsap.fromTo(
+            `#about .stat-container-${i}`,
+            { opacity: 0, y: 50 },
+            {
+              opacity: 1,
+              y: 0,
+              duration: 0.8,
+              delay: 0.4 + i * 0.2,
+              ease: "back.out(1.7)",
+              scrollTrigger: {
+                trigger: `#about .stat-container-${i}`,
+                start: "top 85%",
+                toggleActions: "play none none reverse",
+                id: `about-stat-container-${i}`,
+              },
+            }
+          );
+        });
+
+      console.log("AboutSection: Animaciones GSAP inicializadas correctamente");
+    }, 100); // Pequeño retraso para asegurar que todo está listo
+
+    // Limpiar al desmontar
     return () => {
-      ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
+      clearTimeout(initAnimations);
+      ScrollTrigger.getAll().forEach((trigger) => {
+        if (trigger.vars.id && String(trigger.vars.id).includes("about-")) {
+          trigger.kill();
+        }
+      });
     };
-  }, []);
+  }, []); // La dependencia vacía asegura que solo se ejecute una vez al montar
 
   return (
-    <section id="about" className="relative py-20 overflow-hidden bg-secondary">
+    <section
+      id="about"
+      className="relative py-20 overflow-hidden bg-secondary"
+      style={{
+        position: "relative",
+        zIndex: 15,
+        backgroundColor: "#2a2a2a",
+        borderTop: "4px solid #7c6f48",
+        borderBottom: "4px solid #7c6f48",
+      }}
+      ref={sectionRef}
+    >
+      {/* Overlay de depuración condicional */}
+
       <div className="max-w-7xl mx-auto px-4">
         {/* Parallax Background Elements */}
         <motion.div
@@ -258,23 +282,50 @@ export const AboutSection = () => {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center relative">
           {/* Content Section */}
-          <div className="z-10">
-            <h2 className="about-title text-4xl md:text-5xl font-futura text-white mb-6">
+          <div
+            className="z-10"
+            style={{
+              opacity: 1,
+              backgroundColor: "rgba(42, 42, 42, 0.9)",
+              padding: "20px",
+              borderRadius: "8px",
+              // border: "1px solid rgba(255,255,255,0.1)",
+            }}
+          >
+            <h2
+              className="about-title text-4xl md:text-5xl font-futura text-white mb-6"
+              style={{
+                opacity: 1,
+                textShadow: "2px 2px 4px rgba(0,0,0,0.5)",
+              }}
+            >
               WHO ARE WE
             </h2>
-            <p className="about-paragraph text-gray-300 mb-6 leading-relaxed font-inter">
+            <p
+              className="about-paragraph text-gray-300 mb-6 leading-relaxed font-inter"
+              style={{
+                opacity: 1,
+                textShadow: "1px 1px 2px rgba(0,0,0,0.5)",
+              }}
+            >
               WHO ARE WE R3ALIM, a studio specialised in architectural
               visualisation and design storytelling.
               <br />
               We help you bring your architectural ideas to life with clarity,
               atmosphere, and depth—always tailored to your specific project.
-              Our name comes from the fusion of “Real” and “Imagination”,
+              Our name comes from the fusion of "Real" and "Imagination",
               because we believe architecture lives right at that intersection:
-              where imagination becomes real, through design. We’re not just
-              rendering images—we’re shaping the way your work is perceived,
+              where imagination becomes real, through design. We're not just
+              rendering images—we're shaping the way your work is perceived,
               understood, and remembered.
             </p>
-            <p className="about-paragraph text-gray-300 mb-8 leading-relaxed font-inter">
+            <p
+              className="about-paragraph text-gray-300 mb-8 leading-relaxed font-inter"
+              style={{
+                opacity: 1,
+                textShadow: "1px 1px 2px rgba(0,0,0,0.5)",
+              }}
+            >
               Our approach is rooted in architecture itself: our team is formed
               by architects and designers who understand the language of space,
               scale, and intention. This means that every project is treated not
@@ -293,12 +344,14 @@ export const AboutSection = () => {
           </div>
 
           {/* Video Section */}
-          <div className="video-container relative aspect-video">
+          <div
+            className="video-container relative aspect-video"
+            style={{ opacity: 1 }}
+          >
             <div className="relative rounded-lg overflow-hidden shadow-xl">
               <video
                 ref={videoRef}
                 className="w-full h-full object-cover"
-                //poster="https://images.unsplash.com/photo-1545558014-8692077e9b5c?auto=format&fit=crop&q=80"
                 loop
                 muted
                 playsInline
@@ -337,11 +390,15 @@ export const AboutSection = () => {
         </div>
 
         {/* Stats Section */}
-        <div className="hidden md:grid md:grid-cols-3 gap-8 mt-20">
+        <div
+          className="hidden md:grid md:grid-cols-3 gap-8 mt-20"
+          style={{ opacity: 1, position: "relative", zIndex: 5 }}
+        >
           {stats.map((stat, index) => (
             <div
               key={stat.id}
               className={`stat-container-${index} bg-primary/50 rounded-lg p-6 text-center backdrop-blur-sm transform transition-transform hover:scale-105 duration-300`}
+              style={{ opacity: 1 }}
             >
               <div className="flex justify-center mb-4 text-accent">
                 {stat.icon}

@@ -1,22 +1,30 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Masonry from "react-masonry-css";
-import { X } from "lucide-react";
-import { useInView } from "react-intersection-observer";
+import { X, ChevronLeft, ChevronRight } from "lucide-react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-gsap.registerPlugin(ScrollTrigger);
+// Asegurarnos de que GSAP solo se registra una vez y de manera limpia
+if (typeof window !== "undefined") {
+  gsap.registerPlugin(ScrollTrigger);
+}
 
 type MainCategory = "all" | "exterior" | "interior";
 type SubCategory = string | null;
+
+interface ProjectImage {
+  url: string;
+  alt: string;
+}
 
 interface Project {
   id: number;
   title: string;
   mainCategory: MainCategory;
   subCategory: string;
-  imageUrl: string;
+  coverImage: string;
+  images: ProjectImage[];
   description: string;
 }
 
@@ -25,195 +33,143 @@ interface CategoryItem {
   label: string;
 }
 
+// Proyectos reestructurados con múltiples imágenes
 const projects: Project[] = [
   {
     id: 1,
-    title: "Modern Villa Exterior",
+    title: "Urban Residences Complex",
     mainCategory: "exterior",
-    subCategory: "modern",
-    imageUrl:
+    subCategory: "residential",
+    coverImage:
       "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//1a.webp",
-    description: "Contemporary villa design with sustainable materials",
+    images: [
+      {
+        url: "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//1a.webp",
+        alt: "Main exterior view",
+      },
+      {
+        url: "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//3a.webp",
+        alt: "Side exterior view",
+      },
+      {
+        url: "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//2a.webp",
+        alt: "Interior common space",
+      },
+    ],
+    description:
+      "Este complejo residencial urbano combina arquitectura moderna con funcionalidad sostenible. Diseñado para integrarse perfectamente en el entorno urbano, ofrece espacios interiores luminosos y amplios con acabados minimalistas. El proyecto incorpora elementos ecológicos como paneles solares y sistemas de recolección de agua de lluvia, alineándose con los estándares contemporáneos de construcción sustentable.",
   },
   {
     id: 2,
-    title: "Minimalist Living Room",
+    title: "Luxury Living Spaces",
     mainCategory: "interior",
-    subCategory: "minimalist",
-    imageUrl:
+    subCategory: "residential",
+    coverImage:
       "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//2a.webp",
-    description: "Open concept living space with natural light",
+    images: [
+      {
+        url: "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//2a.webp",
+        alt: "Main living room",
+      },
+      {
+        url: "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//Escena%201%20(1).webp",
+        alt: "Kitchen view",
+      },
+      {
+        url: "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//INT1.webp",
+        alt: "Master bedroom",
+      },
+      {
+        url: "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//INT2.webp",
+        alt: "Bathroom",
+      },
+    ],
+    description:
+      "Una exploración sofisticada del lujo contemporáneo, este proyecto interior redefine el concepto de vivienda de alta gama. Cada espacio ha sido meticulosamente diseñado para balancear estética y funcionalidad, utilizando materiales de primera calidad y soluciones de iluminación innovadoras. Los ambientes fluyen orgánicamente entre sí, creando un sentido de apertura mientras mantienen su identidad única.",
   },
   {
     id: 3,
-    title: "Classic Urban Villa",
+    title: "Commercial Plaza Development",
     mainCategory: "exterior",
-    subCategory: "classic",
-    imageUrl:
-      "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//360%20Interior.webp",
-    description: "Traditional exterior design with modern amenities",
+    subCategory: "commercial",
+    coverImage:
+      "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//Escena%2056_upscale01.webp",
+    images: [
+      {
+        url: "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//Escena%2056_upscale01.webp",
+        alt: "Plaza main view",
+      },
+      {
+        url: "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//Escena%202.webp",
+        alt: "Commercial entrance",
+      },
+      {
+        url: "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//Escena%203.webp",
+        alt: "Night illumination",
+      },
+      {
+        url: "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//perspectiva%201%20dia.webp",
+        alt: "Aerial view",
+      },
+    ],
+    description:
+      "Este desarrollo comercial de escala media integra espacios de retail, oficinas y áreas de recreación en un diseño cohesivo y dinámico. El proyecto prioriza la accesibilidad peatonal y crea múltiples puntos de interacción social. Los materiales contemporáneos como vidrio estructural, acero y hormigón expuesto se combinan para crear una estética distintiva que refleja la naturaleza progresista de las empresas que alberga.",
   },
   {
     id: 4,
-    title: "Contemporary Mountain Retreat",
+    title: "Metropolitan Housing Complex",
     mainCategory: "exterior",
-    subCategory: "contemporary",
-    imageUrl:
-      "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//3a.webp",
-    description: "Sustainable retreat integrated with mountain surroundings",
-  },
-  {
-    id: 6,
-    title: "Rustic Cabin Interior",
-    mainCategory: "interior",
-    subCategory: "rustic",
-    imageUrl:
-      "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//Escena%201%20(1).webp",
-    description: "Warm and cozy interior with natural wood elements",
-  },
-  {
-    id: 8,
-    title: "Modern Beach House",
-    mainCategory: "exterior",
-    subCategory: "modern",
-    imageUrl:
-      "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//Escena%202.webp",
-    description: "Sleek design with panoramic ocean views",
-  },
-  {
-    id: 8,
-    title: "Modern Beach House",
-    mainCategory: "exterior",
-    subCategory: "modern",
-    imageUrl:
-      "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//Escena%203.webp",
-    description: "Sleek design with panoramic ocean views",
-  },
-  {
-    id: 9,
-    title: "Modern Beach House",
-    mainCategory: "exterior",
-    subCategory: "modern",
-    imageUrl:
-      "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//Escena%204_upscale01.webp",
-    description: "Sleek design with panoramic ocean views",
-  },
-  {
-    id: 10,
-    title: "Modern Beach House",
-    mainCategory: "exterior",
-    subCategory: "modern",
-    imageUrl:
-      "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//Escena%2055_upscale01.webp",
-    description: "Sleek design with panoramic ocean views",
-  },
-  {
-    id: 11,
-    title: "Modern Beach House",
-    mainCategory: "exterior",
-    subCategory: "modern",
-    imageUrl:
-      "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//Escena%2056_upscale01.webp",
-    description: "Sleek design with panoramic ocean views",
-  },
-  {
-    id: 12,
-    title: "Modern Beach House",
-    mainCategory: "exterior",
-    subCategory: "modern",
-    imageUrl:
-      "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//fente.webp",
-    description: "Sleek design with panoramic ocean views",
-  },
-  {
-    id: 13,
-    title: "Modern Beach House",
-    mainCategory: "exterior",
-    subCategory: "modern",
-    imageUrl:
-      "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//Fondo.webp",
-    description: "Sleek design with panoramic ocean views",
-  },
-  {
-    id: 14,
-    title: "Modern Beach House",
-    mainCategory: "exterior",
-    subCategory: "modern",
-    imageUrl:
-      "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//Frente.webp",
-    description: "Sleek design with panoramic ocean views",
-  },
-  {
-    id: 15,
-    title: "Modern Beach House",
-    mainCategory: "exterior",
-    subCategory: "modern",
-    imageUrl:
-      "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//Imagen(1)_upscale01.webp",
-    description: "Sleek design with panoramic ocean views",
-  },
-  {
-    id: 16,
-    title: "Modern Beach House",
-    mainCategory: "exterior",
-    subCategory: "modern",
-    imageUrl:
+    subCategory: "high-density",
+    coverImage:
       "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//Imagen_upscale01.webp",
-    description: "Sleek design with panoramic ocean views",
+    images: [
+      {
+        url: "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//Imagen_upscale01.webp",
+        alt: "Complex facade",
+      },
+      {
+        url: "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//Imagen(1)_upscale01.webp",
+        alt: "Residential towers",
+      },
+      {
+        url: "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//Escena%204_upscale01.webp",
+        alt: "Community gardens",
+      },
+      {
+        url: "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//Escena%2055_upscale01.webp",
+        alt: "Public spaces",
+      },
+    ],
+    description:
+      "Un proyecto residencial de alta densidad que redefine el concepto de vivienda urbana contemporánea. Este complejo integra eficientemente cientos de unidades habitacionales mientras mantiene un sentido de comunidad a través de espacios compartidos cuidadosamente diseñados. La sustentabilidad es central al diseño, incorporando sistemas de eficiencia energética, extensas áreas verdes y terrazas comunitarias que promueven la interacción social entre residentes.",
   },
   {
-    id: 17,
-    title: "Modern Beach House",
+    id: 5,
+    title: "Boutique Office Building",
     mainCategory: "exterior",
-    subCategory: "modern",
-    imageUrl:
-      "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//INT1.webp",
-    description: "Sleek design with panoramic ocean views",
-  },
-  {
-    id: 18,
-    title: "Modern Beach House",
-    mainCategory: "exterior",
-    subCategory: "modern",
-    imageUrl:
-      "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//INT2.webp",
-    description: "Sleek design with panoramic ocean views",
-  },
-  {
-    id: 19,
-    title: "Modern Beach House",
-    mainCategory: "exterior",
-    subCategory: "modern",
-    imageUrl:
-      "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//Interior.webp",
-    description: "Sleek design with panoramic ocean views",
-  },
-  {
-    id: 20,
-    title: "Modern Beach House",
-    mainCategory: "exterior",
-    subCategory: "modern",
-    imageUrl:
-      "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//peatonal.webp",
-    description: "Sleek design with panoramic ocean views",
-  },
-  {
-    id: 21,
-    title: "Modern Beach House",
-    mainCategory: "exterior",
-    subCategory: "modern",
-    imageUrl:
-      "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//perspectiva%201%20dia.webp",
-    description: "Sleek design with panoramic ocean views",
-  },
-  {
-    id: 22,
-    title: "Modern Beach House",
-    mainCategory: "exterior",
-    subCategory: "modern",
-    imageUrl:
-      "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//perspectiva%201.jpg",
-    description: "Sleek design with panoramic ocean views",
+    subCategory: "commercial",
+    coverImage:
+      "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//Frente.webp",
+    images: [
+      {
+        url: "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//Frente.webp",
+        alt: "Building facade",
+      },
+      {
+        url: "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//fente.webp",
+        alt: "Entry view",
+      },
+      {
+        url: "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//Interior.webp",
+        alt: "Main lobby",
+      },
+      {
+        url: "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//peatonal.webp",
+        alt: "Street view",
+      },
+    ],
+    description:
+      "Este edificio de oficinas boutique representa un enfoque meticuloso hacia el espacio de trabajo moderno. Con sólo cinco plantas, cada nivel ha sido diseñado para maximizar la entrada de luz natural y proporcionar vistas panorámicas de la ciudad. La fachada combina elementos transparentes y opacos que juegan con la luz a lo largo del día, mientras que el interior fomenta la colaboración a través de espacios flexibles y áreas comunes inspiradoras.",
   },
 ];
 
@@ -244,15 +200,17 @@ export const GallerySection = () => {
   const [selectedSubCategory, setSelectedSubCategory] =
     useState<SubCategory>(null);
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
-  const [ref] = useInView({
-    triggerOnce: false,
-    threshold: 0.1,
-  });
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   // Reset subcategory when main category changes
   useEffect(() => {
     setSelectedSubCategory(null);
   }, [selectedMainCategory]);
+
+  // Reset image index when selecting a new project
+  useEffect(() => {
+    setCurrentImageIndex(0);
+  }, [selectedProject]);
 
   const filteredProjects = projects.filter((project) => {
     if (selectedMainCategory === "all") return true;
@@ -262,96 +220,78 @@ export const GallerySection = () => {
     return true;
   });
 
-  useEffect(() => {
-    // Animación para el título y subtítulo cuando entran en el viewport
-    gsap.fromTo(
-      ".gallery-title",
-      { opacity: 0, y: -50 },
-      {
-        opacity: 1,
-        y: 0,
-        duration: 1,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: ".gallery-title",
-          start: "top 80%",
-          toggleActions: "play none none reverse",
-        },
-      }
-    );
+  // Funciones para navegar entre imágenes en el modal
+  const nextImage = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (selectedProject) {
+      setCurrentImageIndex((prev) =>
+        prev === selectedProject.images.length - 1 ? 0 : prev + 1
+      );
+    }
+  };
 
-    gsap.fromTo(
-      ".gallery-subtitle",
-      { opacity: 0, y: -30 },
-      {
-        opacity: 1,
-        y: 0,
-        duration: 1,
-        delay: 0.3,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: ".gallery-subtitle",
-          start: "top 80%",
-          toggleActions: "play none none reverse",
-        },
-      }
-    );
-
-    // Animación para la galería
-    gsap.fromTo(
-      ".gallery-grid",
-      { opacity: 0 },
-      {
-        opacity: 1,
-        duration: 1.2,
-        delay: 0.5,
-        scrollTrigger: {
-          trigger: ".gallery-grid",
-          start: "top 90%",
-          toggleActions: "play none none reverse",
-        },
-      }
-    );
-
-    // Animación para las categorías
-    gsap.fromTo(
-      ".gallery-categories button",
-      {
-        opacity: 0,
-        y: 20,
-      },
-      {
-        opacity: 1,
-        y: 0,
-        duration: 0.5,
-        stagger: 0.1,
-        ease: "back.out(1.7)",
-        scrollTrigger: {
-          trigger: ".gallery-categories",
-          start: "top 85%",
-          toggleActions: "play none none reverse",
-        },
-      }
-    );
-
-    return () => {
-      ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
-    };
-  }, []);
+  const prevImage = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (selectedProject) {
+      setCurrentImageIndex((prev) =>
+        prev === 0 ? selectedProject.images.length - 1 : prev - 1
+      );
+    }
+  };
 
   return (
-    <section id="gallery" className="py-20 px-4 bg-secondary min-h-screen">
-      <div ref={ref} className="max-w-7xl mx-auto">
-        <h2 className="gallery-title text-4xl md:text-5xl font-futura text-white text-center mb-4">
-          Our Portfolio
-        </h2>
-        <p className="gallery-subtitle text-gray-300 text-center mb-12 font-inter">
-          Explore our diverse collection of architectural projects
-        </p>
+    <section
+      id="gallery"
+      className="py-20 px-4 bg-secondary min-h-screen"
+      data-section="gallery"
+      style={{
+        position: "relative",
+        zIndex: 10,
+        marginTop: "2rem",
+        borderTop: "1px solid rgba(255,255,255,0.1)",
+      }}
+    >
+      <div
+        className="absolute top-0 left-0 w-full h-20 bg-gradient-to-b from-primary to-transparent opacity-50"
+        style={{ pointerEvents: "none" }}
+      ></div>
 
-        {/* Main Categories */}
-        <div className="gallery-categories flex flex-wrap justify-center gap-4 mb-6">
-          {mainCategories.map((category) => (
+      <div className="max-w-7xl mx-auto relative">
+        {/* Título de la sección con Framer Motion en lugar de GSAP */}
+        <motion.div
+          className="text-center mb-16"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7 }}
+          style={{ position: "relative", zIndex: 20 }}
+        >
+          <motion.h2
+            className="gallery-title text-4xl md:text-5xl font-futura text-white mb-4 relative inline-block"
+            initial={{ opacity: 0, y: -30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.1 }}
+          >
+            Our Portfolio
+            <span className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-24 h-1 bg-accent"></span>
+          </motion.h2>
+          <motion.p
+            className="gallery-subtitle text-gray-300 max-w-2xl mx-auto mt-6 font-inter"
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.3 }}
+          >
+            Explore our diverse collection of architectural projects
+          </motion.p>
+        </motion.div>
+
+        {/* Main Categories con Framer Motion en lugar de GSAP */}
+        <motion.div
+          className="gallery-categories flex flex-wrap justify-center gap-4 mb-10"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5, delay: 0.4 }}
+        >
+          {mainCategories.map((category, index) => (
             <motion.button
               key={category.id}
               onClick={() =>
@@ -363,26 +303,29 @@ export const GallerySection = () => {
                     ? "bg-accent text-white shadow-md shadow-accent/30"
                     : "bg-gray-800 text-gray-300 hover:bg-gray-700 hover:text-white"
                 }`}
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.5 + index * 0.1 }}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
               {category.label}
             </motion.button>
           ))}
-        </div>
+        </motion.div>
 
-        {/* Sub Categories */}
+        {/* Sub Categories con mejor visibilidad */}
         <AnimatePresence mode="wait">
           {selectedMainCategory !== "all" &&
             subCategories[selectedMainCategory].length > 0 && (
               <motion.div
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: "auto" }}
-                exit={{ opacity: 0, height: 0 }}
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
                 transition={{ duration: 0.3 }}
-                className="overflow-hidden"
+                className="mb-12"
               >
-                <div className="flex flex-wrap justify-center gap-3 mb-10">
+                <div className="flex flex-wrap justify-center gap-3 mb-6">
                   {subCategories[selectedMainCategory].map((category) => (
                     <motion.button
                       key={category.id}
@@ -406,7 +349,7 @@ export const GallerySection = () => {
             )}
         </AnimatePresence>
 
-        {/* Gallery Grid */}
+        {/* Gallery Grid - Mostrando solo las imágenes de portada */}
         <motion.div
           className="gallery-grid"
           layout
@@ -434,7 +377,7 @@ export const GallerySection = () => {
               >
                 <div className="relative pb-[100%] overflow-hidden rounded-lg">
                   <img
-                    src={project.imageUrl}
+                    src={project.coverImage}
                     alt={project.title}
                     className="absolute inset-0 w-full h-full object-cover transform transition-transform duration-500 group-hover:scale-110"
                   />
@@ -442,9 +385,12 @@ export const GallerySection = () => {
                     <h3 className="text-white font-futura text-lg mb-1">
                       {project.title}
                     </h3>
-                    <p className="text-gray-300 text-sm font-inter">
+                    <p className="text-gray-300 text-sm font-inter line-clamp-2">
                       {project.description}
                     </p>
+                    <div className="mt-2 text-xs text-accent">
+                      +{project.images.length} imágenes
+                    </div>
                   </div>
                 </div>
               </motion.div>
@@ -452,7 +398,7 @@ export const GallerySection = () => {
           </Masonry>
         </motion.div>
 
-        {/* Modal */}
+        {/* Modal con galería de imágenes */}
         <AnimatePresence>
           {selectedProject && (
             <motion.div
@@ -477,13 +423,56 @@ export const GallerySection = () => {
                 >
                   <X className="w-6 h-6" />
                 </button>
+
+                {/* Imagen actual */}
                 <div className="relative">
                   <img
-                    src={selectedProject.imageUrl}
-                    alt={selectedProject.title}
+                    src={selectedProject.images[currentImageIndex].url}
+                    alt={selectedProject.images[currentImageIndex].alt}
                     className="w-full h-auto"
                   />
+
+                  {/* Navegación de imágenes */}
+                  {selectedProject.images.length > 1 && (
+                    <>
+                      <button
+                        onClick={prevImage}
+                        className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/50 rounded-full p-3 text-white hover:bg-black/80 transition-colors"
+                        aria-label="Previous image"
+                      >
+                        <ChevronLeft className="w-6 h-6" />
+                      </button>
+                      <button
+                        onClick={nextImage}
+                        className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/50 rounded-full p-3 text-white hover:bg-black/80 transition-colors"
+                        aria-label="Next image"
+                      >
+                        <ChevronRight className="w-6 h-6" />
+                      </button>
+                    </>
+                  )}
+
+                  {/* Indicador de imágenes */}
+                  <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-2">
+                    {selectedProject.images.map((_, index) => (
+                      <button
+                        key={index}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setCurrentImageIndex(index);
+                        }}
+                        className={`w-2 h-2 rounded-full ${
+                          currentImageIndex === index
+                            ? "bg-accent"
+                            : "bg-white/50"
+                        }`}
+                        aria-label={`Go to image ${index + 1}`}
+                      />
+                    ))}
+                  </div>
                 </div>
+
+                {/* Información del proyecto */}
                 <div className="p-6">
                   <h3 className="text-white font-futura text-2xl mb-2">
                     {selectedProject.title}
@@ -501,7 +490,9 @@ export const GallerySection = () => {
                       }
                     </span>
                     {selectedProject.subCategory &&
-                      selectedProject.mainCategory !== "all" && (
+                      selectedProject.mainCategory !== "all" &&
+                      subCategories[selectedProject.mainCategory].length >
+                        0 && (
                         <span className="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-xs">
                           {
                             subCategories[selectedProject.mainCategory]?.find(

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useLayoutEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import {
@@ -14,7 +14,10 @@ import {
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-gsap.registerPlugin(ScrollTrigger);
+// Asegurarnos de que GSAP solo se registra una vez y de manera limpia
+if (typeof window !== "undefined") {
+  gsap.registerPlugin(ScrollTrigger);
+}
 
 interface Service {
   id: number;
@@ -150,71 +153,91 @@ export const ServicesSection = () => {
     }
   };
 
-  useEffect(() => {
-    // Animación para el título y subtítulo cuando entran en el viewport
-    gsap.fromTo(
-      ".services-title",
-      { opacity: 0, y: -50 },
-      {
-        opacity: 1,
-        y: 0,
-        duration: 1,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: ".services-title",
-          start: "top 80%",
-          toggleActions: "play none none reverse",
-        },
-      }
-    );
+  // Usar useLayoutEffect para las animaciones GSAP
+  useLayoutEffect(() => {
+    // Limpiar todos los ScrollTriggers primero
+    const allTriggers = ScrollTrigger.getAll();
+    allTriggers.forEach((trigger) => trigger.kill());
 
-    gsap.fromTo(
-      ".services-subtitle",
-      { opacity: 0, y: -30 },
-      {
-        opacity: 1,
-        y: 0,
-        duration: 1,
-        delay: 0.3,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: ".services-subtitle",
-          start: "top 80%",
-          toggleActions: "play none none reverse",
-        },
-      }
-    );
+    // Reiniciar GSAP para este componente
+    gsap.registerPlugin(ScrollTrigger);
 
-    // Verificamos si estamos en una pantalla móvil
-    const isMobile = window.innerWidth < 768;
-
-    if (!isMobile) {
-      // Animación para las cards en desktop
-      const serviceCards = gsap.utils.toArray<HTMLElement>(".service-card");
-      serviceCards.forEach((card, i) => {
-        gsap.fromTo(
-          card,
-          {
-            opacity: 0,
-            y: 100,
-            scale: 0.9,
+    // Usar setTimeout para asegurar que el DOM está listo
+    const initAnimations = setTimeout(() => {
+      // Animación para el título y subtítulo con IDs únicos
+      gsap.fromTo(
+        "#services .services-title",
+        { opacity: 0, y: -50 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 1,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: "#services .services-title",
+            start: "top 80%",
+            toggleActions: "play none none reverse",
+            id: "services-title-" + Date.now(),
           },
-          {
-            opacity: 1,
-            y: 0,
-            scale: 1,
-            duration: 0.8,
-            delay: i * 0.15, // Efecto escalonado
-            ease: "power2.out",
-            scrollTrigger: {
-              trigger: card,
-              start: "top 85%",
-              toggleActions: "play none none reverse",
-            },
-          }
+        }
+      );
+
+      gsap.fromTo(
+        "#services .services-subtitle",
+        { opacity: 0, y: -30 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 1,
+          delay: 0.3,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: "#services .services-subtitle",
+            start: "top 80%",
+            toggleActions: "play none none reverse",
+            id: "services-subtitle-" + Date.now(),
+          },
+        }
+      );
+
+      // Verificamos si estamos en una pantalla móvil
+      const isMobile = window.innerWidth < 768;
+
+      if (!isMobile) {
+        // Animación para las cards en desktop con IDs únicos
+        const serviceCards = gsap.utils.toArray<HTMLElement>(
+          "#services .service-card"
         );
-      });
-    }
+        serviceCards.forEach((card, i) => {
+          gsap.fromTo(
+            card,
+            {
+              opacity: 0,
+              y: 100,
+              scale: 0.9,
+            },
+            {
+              opacity: 1,
+              y: 0,
+              scale: 1,
+              duration: 0.8,
+              delay: i * 0.15, // Efecto escalonado
+              ease: "power2.out",
+              scrollTrigger: {
+                trigger: card,
+                start: "top 85%",
+                toggleActions: "play none none reverse",
+                id: `services-card-${i}-${Date.now()}`,
+              },
+            }
+          );
+        });
+      }
+
+      console.log(
+        "ServicesSection: Animaciones GSAP inicializadas correctamente"
+      );
+    }, 150); // Pequeño retraso para asegurar que todo está listo
 
     // Gestionar la visibilidad de los botones de navegación en función del scroll
     const handleScroll = () => {
@@ -244,7 +267,13 @@ export const ServicesSection = () => {
     }
 
     return () => {
-      ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
+      clearTimeout(initAnimations);
+      // Limpiar solo los ScrollTriggers relacionados con services
+      ScrollTrigger.getAll().forEach((trigger) => {
+        if (trigger.vars.id && String(trigger.vars.id).includes("services-")) {
+          trigger.kill();
+        }
+      });
       if (currentContainer) {
         currentContainer.removeEventListener("scroll", handleScroll);
       }
