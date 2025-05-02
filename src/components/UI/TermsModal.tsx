@@ -33,7 +33,7 @@ export const TermsModal = ({ isOpen, onClose }: TermsModalProps) => {
               <X className="w-6 h-6" />
             </button>
             <iframe
-              src="https://docs.google.com/document/d/e/2PACX-1vReHI9m9CPXU1-rQEfduasaqt1AbVk6AB1WbhRPGjL5Fwb7GLvHr8BoloQz3w7S8CoKBFlgfHZpR0TN/pub?embedded=true"
+              src="https://docs.google.com/document/d/e/2PACX-1vTgxcj3MvP5LytduElf7dBOONmSPPPtPW-NShkoQ3CAxC1PcHX0JKYwYr6bHkoMQA/pub?embedded=true"
               className="w-full h-full"
               title="Terms and Conditions"
             />

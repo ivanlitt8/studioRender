@@ -37,32 +37,92 @@ interface CategoryItem {
 const projects: Project[] = [
   {
     id: 1,
-    title: "Urban Residences Complex",
+    title: "Live in High: Rise Residential Building",
     mainCategory: "exterior",
-    subCategory: "residential",
+    subCategory: "high-density",
     coverImage:
-      "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//1a.webp",
+      "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//peatonal.webp",
     images: [
       {
-        url: "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//1a.webp",
+        url: "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//peatonal.webp",
         alt: "Main exterior view",
       },
       {
-        url: "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//3a.webp",
+        url: "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//perspectiva%201.jpg",
         alt: "Side exterior view",
       },
       {
-        url: "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//2a.webp",
+        url: "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//perspectiva%201%20dia.webp",
+        alt: "Interior common space",
+      },
+      {
+        url: "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//fente.webp",
+        alt: "Interior common space",
+      },
+      {
+        url: "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//Escena%203.webp",
+        alt: "Interior common space",
+      },
+      {
+        url: "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//Escena%202.webp",
+        alt: "Interior common space",
+      },
+      {
+        url: "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//Escena%201.webp",
         alt: "Interior common space",
       },
     ],
     description:
-      "Este complejo residencial urbano combina arquitectura moderna con funcionalidad sostenible. Diseñado para integrarse perfectamente en el entorno urbano, ofrece espacios interiores luminosos y amplios con acabados minimalistas. El proyecto incorpora elementos ecológicos como paneles solares y sistemas de recolección de agua de lluvia, alineándose con los estándares contemporáneos de construcción sustentable.",
+      "The high-rise building emerges as a lightweight structure that softens its mass through transparency, rhythm, and repetition. Each unit engages the edge, opening toward the landscape with generous balconies that mediate between private life and the urban environment. The structural grid is carefully modulated to allow for flexible floor plans and spatial continuity. A restrained material palette and connection to greenery reinforce the idea of density that integrates rather than dominates.",
   },
   {
     id: 2,
-    title: "Luxury Living Spaces",
-    mainCategory: "interior",
+    title: "Density and Landscape: Collective Housing",
+    mainCategory: "exterior",
+    subCategory: "high-density",
+    coverImage:
+      "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//viv%20aust%205.webp",
+    images: [
+      {
+        url: "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//viv%20aust%205.webp",
+        alt: "Building facade",
+      },
+      {
+        url: "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//viv%20aust%206.webp",
+        alt: "Entry view",
+      },
+      {
+        url: "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//viv%20aust%201.webp",
+        alt: "Main lobby",
+      },
+      {
+        url: "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//viv%20aust%202.webp",
+        alt: "Street view",
+      },
+      {
+        url: "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//viv%20aust%203.webp",
+        alt: "Street view",
+      },
+      {
+        url: "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//viv%20aust%204.webp",
+        alt: "Street view",
+      },
+      {
+        url: "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//viv%20aust%207.webp",
+        alt: "Street view",
+      },
+      {
+        url: "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//viv%20aust.webp",
+        alt: "Street view",
+      },
+    ],
+    description:
+      "An urban living model that embraces density without giving up the landscape. This project weaves collective housing into a green, walkable environment — where architecture, community, and nature coexist in balance. ",
+  },
+  {
+    id: 3,
+    title: "Peaceful Living: Designed for the Outdoors",
+    mainCategory: "exterior",
     subCategory: "residential",
     coverImage:
       "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//2a.webp",
@@ -72,80 +132,89 @@ const projects: Project[] = [
         alt: "Main living room",
       },
       {
-        url: "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//Escena%201%20(1).webp",
+        url: "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//3a.webp",
         alt: "Kitchen view",
       },
       {
-        url: "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//INT1.webp",
+        url: "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//1a.webp",
         alt: "Master bedroom",
       },
       {
-        url: "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//INT2.webp",
-        alt: "Bathroom",
+        url: "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//Escena%2055_upscale01.webp",
+        alt: "Interior common space",
       },
-    ],
-    description:
-      "Una exploración sofisticada del lujo contemporáneo, este proyecto interior redefine el concepto de vivienda de alta gama. Cada espacio ha sido meticulosamente diseñado para balancear estética y funcionalidad, utilizando materiales de primera calidad y soluciones de iluminación innovadoras. Los ambientes fluyen orgánicamente entre sí, creando un sentido de apertura mientras mantienen su identidad única.",
-  },
-  {
-    id: 3,
-    title: "Commercial Plaza Development",
-    mainCategory: "exterior",
-    subCategory: "commercial",
-    coverImage:
-      "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//Escena%2056_upscale01.webp",
-    images: [
       {
         url: "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//Escena%2056_upscale01.webp",
-        alt: "Plaza main view",
-      },
-      {
-        url: "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//Escena%202.webp",
-        alt: "Commercial entrance",
-      },
-      {
-        url: "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//Escena%203.webp",
-        alt: "Night illumination",
-      },
-      {
-        url: "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//perspectiva%201%20dia.webp",
-        alt: "Aerial view",
+        alt: "Interior common space",
       },
     ],
     description:
-      "Este desarrollo comercial de escala media integra espacios de retail, oficinas y áreas de recreación en un diseño cohesivo y dinámico. El proyecto prioriza la accesibilidad peatonal y crea múltiples puntos de interacción social. Los materiales contemporáneos como vidrio estructural, acero y hormigón expuesto se combinan para crear una estética distintiva que refleja la naturaleza progresista de las empresas que alberga.",
+      "This project is a design vision rooted in simplicity, calmness, and connection to nature. Set near the tranquil banks of the Snowy River in East Gippsland, Victoria, this project celebrates the essence of outdoor life—open skies, native landscapes, and the quiet rhythm of rural Australia. Through thoughtful architecture and timeless materiality, we create spaces that invite reflection, comfort, and belonging. Peaceful living, designed for the outdoors isn't just a motto it's a way of building, dwelling, and being.",
   },
   {
     id: 4,
-    title: "Metropolitan Housing Complex",
+    title: "Light Architecture in Harmony with Nature, Newport, NSW",
     mainCategory: "exterior",
-    subCategory: "high-density",
+    subCategory: "residential",
     coverImage:
-      "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//Imagen_upscale01.webp",
+      "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//fachada%202a.webp",
     images: [
       {
-        url: "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//Imagen_upscale01.webp",
-        alt: "Complex facade",
+        url: "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//fachada%202a.webp",
+        alt: "Building facade",
       },
       {
-        url: "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//Imagen(1)_upscale01.webp",
-        alt: "Residential towers",
+        url: "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//fachada%204a.webp",
+        alt: "Building facade",
       },
       {
-        url: "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//Escena%204_upscale01.webp",
-        alt: "Community gardens",
+        url: "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//fachada%201a.webp",
+        alt: "Building facade",
       },
       {
-        url: "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//Escena%2055_upscale01.webp",
-        alt: "Public spaces",
+        url: "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//interior%20p3.webp",
+        alt: "Building facade",
+      },
+      {
+        url: "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//interior%20p2.webp",
+        alt: "Building facade",
+      },
+      {
+        url: "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//interior%20p1.webp",
+        alt: "Building facade",
       },
     ],
     description:
-      "Un proyecto residencial de alta densidad que redefine el concepto de vivienda urbana contemporánea. Este complejo integra eficientemente cientos de unidades habitacionales mientras mantiene un sentido de comunidad a través de espacios compartidos cuidadosamente diseñados. La sustentabilidad es central al diseño, incorporando sistemas de eficiencia energética, extensas áreas verdes y terrazas comunitarias que promueven la interacción social entre residentes.",
+      "Set on the lush sloping terrain of Newport, this elevated home embraces the landscape with a lightweight structure on stilts, reducing its environmental footprint. The compact volume, clad in dark horizontal siding, blends seamlessly into the natural surroundings. A generous perimeter terrace extends the living space outward, fostering a deep connection with the native vegetation and the tranquility of the Australian bush.",
   },
   {
     id: 5,
-    title: "Boutique Office Building",
+    title:
+      "Rugby Club Barbecue Shelter — A Warm Hearth for Community Gatherings",
+    mainCategory: "exterior",
+    subCategory: "residential",
+    coverImage:
+      "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//Escena%204_upscale01.webp",
+    images: [
+      {
+        url: "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//Escena%204_upscale01.webp",
+        alt: "Plaza main view",
+      },
+      {
+        url: "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//Imagen(6)_upscale01.webp",
+        alt: "Commercial entrance",
+      },
+      {
+        url: "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//Imagen(1)_upscale01.webp",
+        alt: "Night illumination",
+      },
+    ],
+    description:
+      "Designed as a welcoming focal point for social interaction, this brick-and-timber pavilion celebrates the spirit of camaraderie rooted in rugby culture. The gable roof and exposed wooden trusses highlight the craftsmanship, while the warm lighting and large openings invite both players and supporters to share a meal after the match. Surrounded by vegetation and anchored by traditional elements like the lamp post, the space blends nostalgia with functionality, enhancing the club’s social fabric.",
+  },
+  {
+    id: 6,
+    title: "Minimalist Residence — Serenity Through Simplicity",
     mainCategory: "exterior",
     subCategory: "commercial",
     coverImage:
@@ -153,26 +222,21 @@ const projects: Project[] = [
     images: [
       {
         url: "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//Frente.webp",
-        alt: "Building facade",
+        alt: "Complex facade",
       },
       {
-        url: "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//fente.webp",
-        alt: "Entry view",
+        url: "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//Fondo.webp",
+        alt: "Residential towers",
       },
       {
         url: "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//Interior.webp",
-        alt: "Main lobby",
-      },
-      {
-        url: "https://aniukvbdbhvqyscfxoug.supabase.co/storage/v1/object/public/projects//peatonal.webp",
-        alt: "Street view",
+        alt: "Community gardens",
       },
     ],
     description:
-      "Este edificio de oficinas boutique representa un enfoque meticuloso hacia el espacio de trabajo moderno. Con sólo cinco plantas, cada nivel ha sido diseñado para maximizar la entrada de luz natural y proporcionar vistas panorámicas de la ciudad. La fachada combina elementos transparentes y opacos que juegan con la luz a lo largo del día, mientras que el interior fomenta la colaboración a través de espacios flexibles y áreas comunes inspiradoras.",
+      "This two-story home reinterprets minimalist principles through a warm, tropical lens. Located in a residential neighborhood, the design emphasizes clean lines, balanced proportions, and lush vegetation integrated into both levels. A restrained material palette featuring wood, concrete, and glass creates a calm and elegant aesthetic. The elevated volume shelters a carport and invites natural light through expansive glazing, while the rain-soaked setting enhances the atmosphere of quiet sophistication.",
   },
 ];
-
 const mainCategories = [
   { id: "all", label: "All Projects" },
   { id: "exterior", label: "Exterior" },
