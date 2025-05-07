@@ -103,6 +103,13 @@ export const AboutSection = () => {
   const y2 = useTransform(scrollY, [0, 1000], [0, -200]);
   const sectionRef = useRef<HTMLElement>(null);
 
+  const scrollToGallery = () => {
+    const gallerySection = document.querySelector("#gallery");
+    if (gallerySection) {
+      gallerySection.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   useEffect(() => {
     if (videoRef.current) {
       const observer = new IntersectionObserver(
@@ -308,8 +315,8 @@ export const AboutSection = () => {
                 textShadow: "1px 1px 2px rgba(0,0,0,0.5)",
               }}
             >
-              WHO ARE WE R3ALIM, a studio specialised in architectural
-              visualisation and design storytelling.
+              We are R3ALIM, a studio specialised in architectural visualisation
+              and design storytelling.
               <br />
               We help you bring your architectural ideas to life with clarity,
               atmosphere, and depth—always tailored to your specific project.
@@ -336,6 +343,7 @@ export const AboutSection = () => {
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
+              onClick={scrollToGallery}
               className="bg-accent text-white px-8 py-3 rounded-full font-inter 
                        hover:bg-accent/90 transition-colors duration-300"
             >
