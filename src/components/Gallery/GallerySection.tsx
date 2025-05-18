@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Masonry from "react-masonry-css";
-import { X, ChevronLeft, ChevronRight } from "lucide-react";
+import { X, ChevronLeft, ChevronRight, Loader } from "lucide-react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -210,7 +210,7 @@ const projects: Project[] = [
       },
     ],
     description:
-      "Designed as a welcoming focal point for social interaction, this brick-and-timber pavilion celebrates the spirit of camaraderie rooted in rugby culture. The gable roof and exposed wooden trusses highlight the craftsmanship, while the warm lighting and large openings invite both players and supporters to share a meal after the match. Surrounded by vegetation and anchored by traditional elements like the lamp post, the space blends nostalgia with functionality, enhancing the club’s social fabric.",
+      "Designed as a welcoming focal point for social interaction, this brick-and-timber pavilion celebrates the spirit of camaraderie rooted in rugby culture. The gable roof and exposed wooden trusses highlight the craftsmanship, while the warm lighting and large openings invite both players and supporters to share a meal after the match. Surrounded by vegetation and anchored by traditional elements like the lamp post, the space blends nostalgia with functionality, enhancing the club's social fabric.",
   },
   {
     id: 6,
@@ -265,6 +265,8 @@ export const GallerySection = () => {
     useState<SubCategory>(null);
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
+  const [isImageLoading, setIsImageLoading] = useState(true);
 
   // Reset subcategory when main category changes
   useEffect(() => {
@@ -274,6 +276,23 @@ export const GallerySection = () => {
   // Reset image index when selecting a new project
   useEffect(() => {
     setCurrentImageIndex(0);
+  }, [selectedProject]);
+
+  // Reset image loading state when changing images
+  useEffect(() => {
+    if (selectedProject) {
+      setIsImageLoading(true);
+    }
+  }, [currentImageIndex, selectedProject]);
+
+  // Ocultar/mostrar el navbar cuando se abre/cierra un proyecto
+  useEffect(() => {
+    const navbar = document.querySelector("nav");
+    if (selectedProject) {
+      navbar?.classList.add("hidden");
+    } else {
+      navbar?.classList.remove("hidden");
+    }
   }, [selectedProject]);
 
   const filteredProjects = projects.filter((project) => {
@@ -490,11 +509,19 @@ export const GallerySection = () => {
 
                 {/* Imagen actual */}
                 <div className="relative">
-                  <img
-                    src={selectedProject.images[currentImageIndex].url}
-                    alt={selectedProject.images[currentImageIndex].alt}
-                    className="w-full h-auto"
-                  />
+                  <div className="h-[50vh] md:h-[70vh] overflow-hidden relative">
+                    {isImageLoading && (
+                      <div className="absolute inset-0 flex items-center justify-center bg-black/20 z-10">
+                        <Loader className="w-10 h-10 text-accent animate-spin" />
+                      </div>
+                    )}
+                    <img
+                      src={selectedProject.images[currentImageIndex].url}
+                      alt={selectedProject.images[currentImageIndex].alt}
+                      className="w-full h-full object-contain"
+                      onLoad={() => setIsImageLoading(false)}
+                    />
+                  </div>
 
                   {/* Navegación de imágenes */}
                   {selectedProject.images.length > 1 && (
@@ -537,14 +564,38 @@ export const GallerySection = () => {
                 </div>
 
                 {/* Información del proyecto */}
-                <div className="p-6">
-                  <h3 className="text-white font-futura text-2xl mb-2">
+                <div className="p-4 md:p-6">
+                  <h3 className="text-white font-futura text-xl md:text-2xl mb-1 md:mb-2">
                     {selectedProject.title}
                   </h3>
-                  <p className="text-gray-300 mb-4 font-inter">
-                    {selectedProject.description}
-                  </p>
-                  <div className="flex gap-2">
+
+                  <div className="relative">
+                    {/* Contenedor con altura fija y scroll cuando se expande */}
+                    <div
+                      className={`overflow-y-auto transition-all duration-300 ${
+                        isDescriptionExpanded ? "max-h-[150px]" : "max-h-none"
+                      } md:max-h-none`}
+                    >
+                      <p
+                        className={`text-gray-300 font-inter ${
+                          isDescriptionExpanded ? "" : "line-clamp-2"
+                        } md:line-clamp-none`}
+                      >
+                        {selectedProject.description}
+                      </p>
+                    </div>
+
+                    <button
+                      className="text-accent text-xs mt-1 md:hidden"
+                      onClick={() =>
+                        setIsDescriptionExpanded(!isDescriptionExpanded)
+                      }
+                    >
+                      {isDescriptionExpanded ? "Leer menos" : "Leer más"}
+                    </button>
+                  </div>
+
+                  <div className="flex flex-wrap gap-2 mt-2">
                     <span className="bg-accent/20 text-accent px-3 py-1 rounded-full text-xs">
                       {
                         mainCategories.find(
